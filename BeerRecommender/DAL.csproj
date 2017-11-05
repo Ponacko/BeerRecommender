@@ -57,11 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeerDBContext.cs" />
-    <Compile Include="Brewery.cs" />
+    <Compile Include="DataInitializer.cs" />
+    <Compile Include="Entities\Brewery.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="UserRating.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserRating.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

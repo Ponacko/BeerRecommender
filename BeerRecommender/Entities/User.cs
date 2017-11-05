@@ -2,7 +2,9 @@
 
 namespace BeerRecommender {
     public class User {
-        public User() {}
+        public User() {
+            UserRatings = new List<UserRating>();
+        }
 
         public int UserId { get; set; }
         public string UserName { get; set; }

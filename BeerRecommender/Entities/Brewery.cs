@@ -5,7 +5,9 @@ namespace BeerRecommender
 {
     public class Brewery
     {
-        public Brewery() { }
+        public Brewery() {
+            UserRatings = new List<UserRating>();
+        }
 
         public int BreweryID { get; set; }
         [Required]
@@ -13,18 +15,7 @@ namespace BeerRecommender
         public string Address { get; set; }
         public float AverageRating { get; set; }
         public virtual ICollection<UserRating> UserRatings { get; set; }
-
-        public override bool Equals(object obj) {
-            var other = obj as Brewery;
-            if (other == null)
-                return false;
-            return Name.Equals(other.Name) && Address.Equals(other.Address);
-        }
-
-        public override int GetHashCode() {
-            return base.GetHashCode();
-        }
-
+        
         public override string ToString() {
             return $"Brewery {Name} at address {Address} with rating {AverageRating}";
         }
