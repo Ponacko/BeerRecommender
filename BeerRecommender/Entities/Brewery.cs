@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using BeerRecommender.Entities;
 
 namespace BeerRecommender
 {
-    public class Brewery
+    public class Brewery : Entity
     {
         public Brewery() {
             UserRatings = new List<UserRating>();
         }
-
-        public int BreweryID { get; set; }
+        
         [Required]
         public string Name { get; set; }
         public string Address { get; set; }

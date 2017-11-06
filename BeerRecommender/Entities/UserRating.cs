@@ -1,8 +1,9 @@
-﻿namespace BeerRecommender
+﻿using BeerRecommender.Entities;
+
+namespace BeerRecommender
 {
-    public class UserRating
+    public class UserRating : Entity
     {
-        public int UserRatingId { get; set; }
         public User User { get; set; }
         public Brewery Brewery { get; set; }
         public float Rating { get; set; }

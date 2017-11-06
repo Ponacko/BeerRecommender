@@ -9,19 +9,19 @@ using HtmlAgilityPack;
 
 namespace BeerRecommender
 {
-    public class DataInitializer : CreateDatabaseIfNotExists<BeerDbContext>
+    public class DataInitializer : CreateDatabaseIfNotExists<AppDbContext>
     {
-        public DataInitializer(BeerDbContext context) {
+        public DataInitializer(AppDbContext context) {
             Seed(context);
         }
 
-        protected override void Seed(BeerDbContext context) {
+        protected override void Seed(AppDbContext context) {
             HtmlNodeCollection breweries = GetHtmlBreweryNode();
             UpdateBreweryDb(breweries, context);
             base.Seed(context);
         }
 
-        private static void UpdateBreweryDb(HtmlNodeCollection breweries, BeerDbContext context)
+        private static void UpdateBreweryDb(HtmlNodeCollection breweries, AppDbContext context)
         {
             foreach (var b in breweries)
             {
@@ -40,7 +40,7 @@ namespace BeerRecommender
             return breweries;
         }
 
-        private static void AddBreweryToDb(BeerDbContext context, Brewery brewery)
+        private static void AddBreweryToDb(AppDbContext context, Brewery brewery)
         {
             if (!context.Breweries.Any(c => c.Name == brewery.Name))
             {

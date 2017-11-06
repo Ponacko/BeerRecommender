@@ -12,14 +12,14 @@ namespace BeerRecommender
     {
         static void Main(string[] args)
         {
-            using (var context = new BeerDbContext())
+            using (var context = new AppDbContext())
             {
                 PrintBreweriesFromDb(context);
             }
             Console.ReadLine();
         }
 
-        private static void PrintBreweriesFromDb(BeerDbContext context)
+        private static void PrintBreweriesFromDb(AppDbContext context)
         {
             foreach (var brewery in context.Breweries.OrderBy(b => b.Name).Distinct())
             {

@@ -2,9 +2,9 @@
 
 namespace BeerRecommender
 {
-    public class BeerDbContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public BeerDbContext() : base("BeerDb") {
+        public AppDbContext() : base("BeerDb") {
             Database.SetInitializer(new DataInitializer(this));
         }
         public DbSet<Brewery> Breweries { get; set; }
