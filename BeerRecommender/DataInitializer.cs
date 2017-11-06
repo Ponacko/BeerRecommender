@@ -55,7 +55,7 @@ namespace BeerRecommender
             var rating = string.IsNullOrEmpty(ratingStr) ? 0 : float.Parse(ratingStr, CultureInfo.InvariantCulture);
             var brewery = new Brewery()
             {
-                BreweryID = 1,
+                Id = 1,
                 Name = attributes[0].InnerText,
                 Address = attributes[1].InnerText,
                 AverageRating = rating

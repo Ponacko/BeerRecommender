@@ -11,36 +11,31 @@ namespace BeerRecommender.Repositories
 {
     public abstract class Repository<T> where T : Entity {
         protected DbSet<T> entities;
+        protected AppDbContext context;
 
-        protected void Create(T obj) {
-            using (var context = new AppDbContext()) {
-                entities.Add(obj);
-                context.SaveChanges();
-            }
+        public int Create(T obj) {
+            entities.Add(obj);
+            context.SaveChanges();
+            
+            return obj.Id;
         }
 
-        protected T RetrieveById(int id) {
-            return entities.First(e => e.Id == id);
+        public T RetrieveById(int id) {
+            return !entities.Any(e => e.Id == id) ? null : entities.First(e => e.Id == id);
         }
 
-        protected List<T> RetrieveAll() {
+        public List<T> RetrieveAll() {
             return entities.ToList();
         }
 
-        protected void Update(T obj) {
-            using (var context = new AppDbContext()) {
-                entities.AddOrUpdate(obj);
-                context.SaveChanges();
-            }
+        public void Update(T obj) {
+            entities.AddOrUpdate(obj);
+            context.SaveChanges();
         }
 
-        protected void Delete(int id) {
-            using (var context = new AppDbContext()) {
-                entities.Remove(RetrieveById(id));
-                context.SaveChanges();
-            }
-
+        public void Delete(int id) {
+            entities.Remove(RetrieveById(id));
+            context.SaveChanges();
         }
-
     }
 }

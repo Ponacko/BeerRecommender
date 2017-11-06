@@ -3,9 +3,8 @@
     public class UserRatingRepository : Repository<UserRating>
     {
         public UserRatingRepository() {
-            using (var context = new AppDbContext()) {
-                entities = context.UserRatings;
-            }
+            context = new AppDbContext();
+            entities = context.UserRatings;
         }
     }
 }

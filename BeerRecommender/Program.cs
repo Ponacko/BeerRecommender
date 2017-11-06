@@ -4,14 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BeerRecommender.Repositories;
 using HtmlAgilityPack;
 
 namespace BeerRecommender
 {
     class Program
     {
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
             using (var context = new AppDbContext())
             {
                 PrintBreweriesFromDb(context);

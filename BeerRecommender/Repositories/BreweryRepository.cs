@@ -8,9 +8,8 @@ namespace BeerRecommender.Repositories
     public class BreweryRepository : Repository<Brewery> {
 
         public BreweryRepository() {
-            using (var context = new AppDbContext()) {
-                entities = context.Breweries;
-            }
+            context = new AppDbContext();
+            entities = context.Breweries;
         }
     }
 }
