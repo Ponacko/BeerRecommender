@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BeerRecommender.Repositories;
+﻿using BeerRecommender.Repositories;
 using NUnit.Framework;
 
 namespace BeerRecommender.Tests

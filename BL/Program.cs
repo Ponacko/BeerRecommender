@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BeerRecommender;
+using BL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,25 @@ namespace BL
     {
         static void Main(string[] args)
         {
+            //UserService.CreateUser("Pubey", 18, "addd@gmail.com");
+        }
+
+        private static User CreateUser()
+        {
+            return new User()
+            {
+                UserName = "Miso"
+            };
+        }
+
+        private static Brewery CreateBrewery()
+        {
+            return new Brewery()
+            {
+                Name = "Starobrno",
+                Address = "Mendlak",
+                AverageRating = 1.5f
+            };
         }
     }
 }
