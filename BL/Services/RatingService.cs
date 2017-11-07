@@ -24,6 +24,7 @@ namespace BL.Services
                 Rating = rating,
                 IsPrediction = false
             };
+        
             int ratingId = userRatingRepository.Create(userRating);
 
             brewery.UserRatings.Add(userRating);

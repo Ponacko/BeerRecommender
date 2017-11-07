@@ -11,7 +11,7 @@ namespace BeerRecommender
 
         public override string ToString()
         {
-            return $"User {User} rates {Brewery} with rating {Rating}";
+            return $"User {User}rates {Brewery}with rating {Rating}.";
         }
     }
 }

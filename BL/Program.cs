@@ -12,15 +12,7 @@ namespace BL
     {
         static void Main(string[] args)
         {
-            RatingService.AddRating(CreateUser(), CreateBrewery(), 1.0f);
-            using (var context = new AppDbContext())
-            {
-                foreach (var rating in context.UserRatings.OrderBy(b => b.Rating).Distinct())
-                {
-                    Console.WriteLine(rating);
-                }
-            }
-            Console.ReadLine();  
+            //UserService.CreateUser("Pubey", "addd@gmail.com");
         }
 
         private static User CreateUser()
