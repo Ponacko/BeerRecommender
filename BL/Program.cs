@@ -12,7 +12,7 @@ namespace BL
     {
         static void Main(string[] args)
         {
-            UserService.CreateUser("Pubey", 18, "addd@gmail.com");
+            //UserService.CreateUser("Pubey", 18, "addd@gmail.com");
         }
 
         private static User CreateUser()
