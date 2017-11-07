@@ -9,7 +9,6 @@ namespace BeerRecommender {
             UserRatings = new List<UserRating>();
         }
 
-        [Required]
         public string UserName { get; set; }
 
         public virtual ICollection<UserRating> UserRatings { get; set; }
