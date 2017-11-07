@@ -66,8 +66,18 @@
   <ItemGroup>
     <Compile Include="AppDbContext.cs" />
     <Compile Include="DataInitializer.cs" />
+    <Compile Include="Entities\Beer.cs" />
     <Compile Include="Entities\Brewery.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Migrations\201711072240056_InitialCreate.cs" />
+    <Compile Include="Migrations\201711072240056_InitialCreate.Designer.cs">
+      <DependentUpon>201711072240056_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711072250234_UserName_length_limit.cs" />
+    <Compile Include="Migrations\201711072250234_UserName_length_limit.Designer.cs">
+      <DependentUpon>201711072250234_UserName_length_limit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UserRatingRepository.cs" />
@@ -94,6 +104,14 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201711072240056_InitialCreate.resx">
+      <DependentUpon>201711072240056_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711072250234_UserName_length_limit.resx">
+      <DependentUpon>201711072250234_UserName_length_limit.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

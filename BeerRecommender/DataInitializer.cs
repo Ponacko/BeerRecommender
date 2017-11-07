@@ -17,11 +17,13 @@ namespace BeerRecommender
         }
 
         protected override void Seed(AppDbContext context) {
-            List<HtmlNode> breweries = GetHtmlBreweryNode();
-            UpdateBreweryDb(breweries, context);
+            if (!context.Breweries.Any() && !context.Beers.Any()) {
+                List<HtmlNode> breweries = GetHtmlBreweryNode();
+                UpdateBreweryDb(breweries, context);
 
-            List<HtmlNode> beers = GetHtmlBeerNode();
-            UpdateBeersDb(beers, context);
+                List<HtmlNode> beers = GetHtmlBeerNode();
+                UpdateBeersDb(beers, context);
+            }
             base.Seed(context);
         }
 
