@@ -15,6 +15,7 @@ namespace BeerRecommender
             using (var context = new AppDbContext())
             {
                 PrintBreweriesFromDb(context);
+                PrintBeersFromDb(context);
             }
             Console.ReadLine();
         }
@@ -24,6 +25,14 @@ namespace BeerRecommender
             foreach (var brewery in context.Breweries.OrderBy(b => b.Name).Distinct())
             {
                 Console.WriteLine(brewery);
+            }
+        }
+
+        private static void PrintBeersFromDb(AppDbContext context)
+        {
+            foreach (var beer in context.Beers.OrderBy(b => b.Name).Distinct())
+            {
+                Console.WriteLine(beer);
             }
         }
     }
