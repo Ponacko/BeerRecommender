@@ -69,6 +69,7 @@
     <Compile Include="Entities\Beer.cs" />
     <Compile Include="Entities\Brewery.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\UserSimilarity.cs" />
     <Compile Include="Migrations\201711072240056_InitialCreate.cs" />
     <Compile Include="Migrations\201711072240056_InitialCreate.Designer.cs">
       <DependentUpon>201711072240056_InitialCreate.cs</DependentUpon>
@@ -78,6 +79,7 @@
       <DependentUpon>201711072250234_UserName_length_limit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UserRatingRepository.cs" />
