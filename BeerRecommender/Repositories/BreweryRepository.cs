@@ -12,12 +12,6 @@ namespace BeerRecommender.Repositories
             entities = context.Breweries;
         }
 
-        public BreweryRepository(AppDbContext context)
-        {
-            this.context = context;
-            entities = context.Breweries;
-        }
-
         public Brewery RetrieveBreweryByName(string name)
         {
             var retrievedBreweries = context.Breweries.Where(b => b.Name == name);
