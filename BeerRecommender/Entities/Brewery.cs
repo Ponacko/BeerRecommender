@@ -15,7 +15,7 @@ namespace BeerRecommender
         public string City { get; set; }
         public string Address { get; set; }
 
-        //[RegularExpression(@"^(\d{4})$")]
+        [Range(0, int.MaxValue)]
         public int YearOfFoundation { get; set; }
         public string ImageUrl { get; set; }
         public float AverageRating { get; set; }
