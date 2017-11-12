@@ -9,37 +9,21 @@ namespace BeerRecommender.Tests
     [TestFixture]
     public class ServiceTests
     {
+        ObjectFactory Factory = new ObjectFactory();
+
         [Test]
-        public void addRatingTest()
+        public void AddRatingTest()
         {
-            var createdUser = CreateUser();
-            var createdBrewery = CreateBrewery();
+            var createdUser = Factory.CreateNewUser(userName: "Miso");
+            var createdBeer = Factory.CreateNewBeer("Starobrno");
             var urr = new UserRatingRepository();
-            var br = new BreweryRepository();
+            var br = new BeerRepository();
             var ur = new UserRepository();
             ur.Create(createdUser);
 
-            //var createdId = RatingService.AddRating(createdUser, createdBrewery, 7.7f);
-            //var retrieved = urr.RetrieveById(createdId);
-            //Assert.AreEqual(retrieved.Id, createdId);
-        }
-
-        private static User CreateUser()
-        {
-            return new User()
-            {
-                UserName = "Miso"
-            };
-        }
-
-        private static Brewery CreateBrewery()
-        {
-            return new Brewery()
-            {
-                Name = "Starobrno",
-                Address = "Mendlak",
-                AverageRating = 1.5f
-            };
+            var createdId = RatingService.AddRating(createdUser, createdBeer, 4.7f);
+            var retrieved = urr.RetrieveById(createdId);
+            Assert.AreEqual(retrieved.Id, createdId);
         }
     }
 }

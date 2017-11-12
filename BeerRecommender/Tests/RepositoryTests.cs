@@ -6,10 +6,12 @@ namespace BeerRecommender.Tests
     [TestFixture]
     public class RepositoryTests
     {
+        ObjectFactory Factory = new ObjectFactory();
+
         [Test]
         public void CreateAndRetrieveBrewery()
         {
-            var createdBrewery = CreateBrewery();
+            var createdBrewery = Factory.CreateNewBrewery();
             var repository = new BreweryRepository();
             var insertedId = repository.Create(createdBrewery);
             var retrievedBrewery = repository.RetrieveById(insertedId);
@@ -18,7 +20,7 @@ namespace BeerRecommender.Tests
 
         [Test]
         public void UpdateBrewery() {
-            var createdBrewery = CreateBrewery();
+            var createdBrewery = Factory.CreateNewBrewery();
             var repository = new BreweryRepository();
             var insertedId = repository.Create(createdBrewery);
             const string newAddress = "test2";
@@ -31,7 +33,7 @@ namespace BeerRecommender.Tests
 
         [Test]
         public void DeleteBrewery() {
-            var createdBrewery = CreateBrewery();
+            var createdBrewery = Factory.CreateNewBrewery();
             var repository = new BreweryRepository();
             var insertedId = repository.Create(createdBrewery);
             repository.Delete(insertedId);
@@ -43,7 +45,7 @@ namespace BeerRecommender.Tests
         [Test]
         public void CreateAndRetrieveUser()
         {
-            var createdUser = CreateUser();
+            var createdUser = Factory.CreateNewUser();
             var repository = new UserRepository();
             var insertedId = repository.Create(createdUser);
             var retrievedUser = repository.RetrieveById(insertedId);
@@ -53,7 +55,7 @@ namespace BeerRecommender.Tests
         [Test]
         public void UpdateUser()
         {
-            var createdUser = CreateUser();
+            var createdUser = Factory.CreateNewUser();
             var repository = new UserRepository();
             var insertedId = repository.Create(createdUser);
             const string newName = "test2";
@@ -67,7 +69,7 @@ namespace BeerRecommender.Tests
         [Test]
         public void DeleteUser()
         {
-            var createdUser = CreateUser();
+            var createdUser = Factory.CreateNewUser();
             var repository = new UserRepository();
             var insertedId = repository.Create(createdUser);
             repository.Delete(insertedId);
@@ -79,9 +81,9 @@ namespace BeerRecommender.Tests
         [Test]
         public void CreateAndRetrieveRating()
         {
-            var createdUser = CreateUser();
-            var createdBeer = CreateBeer();
-            var createdRating = CreateUserRating(createdUser, createdBeer);
+            var createdUser = Factory.CreateNewUser();
+            var createdBeer = Factory.CreateNewBeer();
+            var createdRating = Factory.CreateNewUserRating(createdUser, createdBeer);
             var repository = new UserRatingRepository();
             var insertedId = repository.Create(createdRating);
             var retrievedRating = repository.RetrieveById(insertedId);
@@ -91,9 +93,9 @@ namespace BeerRecommender.Tests
         [Test]
         public void UpdateRating()
         {
-            var createdUser = CreateUser();
-            var createdBeer = CreateBeer();
-            var createdRating = CreateUserRating(createdUser, createdBeer);
+            var createdUser = Factory.CreateNewUser();
+            var createdBeer = Factory.CreateNewBeer();
+            var createdRating = Factory.CreateNewUserRating(createdUser, createdBeer);
             var repository = new UserRatingRepository();
             var insertedId = repository.Create(createdRating);
             var newRating = 5f;
@@ -107,48 +109,15 @@ namespace BeerRecommender.Tests
         [Test]
         public void DeleteRating()
         {
-            var createdUser = CreateUser();
-            var createdBeer = CreateBeer();
-            var createdRating = CreateUserRating(createdUser, createdBeer);
+            var createdUser = Factory.CreateNewUser();
+            var createdBeer = Factory.CreateNewBeer();
+            var createdRating = Factory.CreateNewUserRating(createdUser, createdBeer);
             var repository = new UserRatingRepository();
             var insertedId = repository.Create(createdRating);
             repository.Delete(insertedId);
             var rating = repository.RetrieveById(insertedId);
 
             Assert.IsNull(rating);
-        }
-
-
-        private static Brewery CreateBrewery()
-        {
-            return new Brewery()
-            {
-                Name = "test",
-                Address = "test",
-                AverageRating = 1.5f
-            };
-        }
-
-        private static User CreateUser() {
-            return new User() {
-                UserName = "username"
-            };
-        }
-
-        private static UserRating CreateUserRating(User user, Beer beer) {
-            return new UserRating() {
-                User = user,
-                Beer = beer,
-                Rating = 0.5f
-            };
-        }
-
-        private static Beer CreateBeer()
-        {
-            return new Beer()
-            {
-                Name = "beername"
-            };
         }
     }
 }
