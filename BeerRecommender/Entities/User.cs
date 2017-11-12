@@ -11,8 +11,7 @@ namespace BeerRecommender
         {
             UserRatings = new List<UserRating>();
         }
-
-        [Index(IsUnique = true)]
+        
         [StringLength(100)]
         [Required(ErrorMessage = "Invalid Username")]
         public string UserName { get; set; }

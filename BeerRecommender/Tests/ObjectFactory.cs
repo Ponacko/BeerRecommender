@@ -9,18 +9,17 @@ namespace BeerRecommender.Tests
 {
     public class ObjectFactory
     {
-        private Random Rand = new Random();
+        private readonly Random rand = new Random();
 
         public Beer CreateNewBeer(string name = null, Brewery brewery = null, string category = null, string imageUrl = null, List<UserRating> ratings = null)
         {
             var beer = new Beer
             {
-                Id = Rand.Next(),
                 Name = name ?? Guid.NewGuid().ToString(),
                 ImageUrl = imageUrl,
                 Category = category ?? "světlý ležák",
                 Brewery = brewery,
-                AverageRating = Helper.GetRandomRating(Rand),
+                AverageRating = Helper.GetRandomRating(rand),
                 UserRatings = ratings
             };
 
@@ -29,11 +28,8 @@ namespace BeerRecommender.Tests
 
         public Brewery CreateNewBrewery(string name = null, string address = null, int year = 1995, string city = null, string imageUrl = null)
         {
-            Random rnd = new Random();
-
             var brewery = new Brewery
             {
-                Id = Rand.Next(),
                 Name = name ?? Guid.NewGuid().ToString(),
                 Address = address ?? "someplace",
                 YearOfFoundation = year,
@@ -44,13 +40,14 @@ namespace BeerRecommender.Tests
             return brewery;
         }
 
-        public User CreateNewUser(string userName = null, ICollection<UserRating> ratings = null)
-        {
+        public User CreateNewUser(string userName = null, ICollection<UserRating> ratings = null) {
+            var name = userName ?? Guid.NewGuid().ToString().Substring(0, 15);
             var user = new User
             {
-                Id = Rand.Next(),
-                UserName = userName ?? Guid.NewGuid().ToString(),
-                UserRatings = ratings
+                UserName = name,
+                UserRatings = ratings,
+                Email = $"{name}@{name}.com",
+                Age = 20
             };
 
             return user;
@@ -58,36 +55,35 @@ namespace BeerRecommender.Tests
 
         public UserRating CreateNewUserRating(User user, Beer beer, float rating = 2.5f, bool isPrediction = false)
         {
-            var UserRating = new UserRating
+            var userRating = new UserRating
             {
-                Id = Rand.Next(),
                 Beer = beer,
                 User = user,
                 Rating = rating,
                 IsPrediction = isPrediction
             };
 
-            return UserRating;
+            return userRating;
         }
 
         public ICollection<User> GenerateUsers(int numberOfUsers)
         {
             var objects = new List<User>();
-            for (int i = 0; i < numberOfUsers; ++i) { objects.Add(CreateNewUser()); }
+            for (var i = 0; i < numberOfUsers; ++i) { objects.Add(CreateNewUser()); }
             return objects;
         }
 
         public ICollection<Brewery> GenerateBreweries(int numberOfUsers)
         {
             var objects = new List<Brewery>();
-            for (int i = 0; i < numberOfUsers; ++i) { objects.Add(CreateNewBrewery()); }
+            for (var i = 0; i < numberOfUsers; ++i) { objects.Add(CreateNewBrewery()); }
             return objects;
         }
 
         public ICollection<Beer> GenerateBeers(int numberOfUsers, List<Brewery> breweries = null)
         {
             var objects = new List<Beer>();
-            for (int i = 0; i < numberOfUsers; ++i)
+            for (var i = 0; i < numberOfUsers; ++i)
             {
                 objects.Add(CreateNewBeer(brewery: breweries[i % breweries.Count]));
             }
@@ -101,12 +97,7 @@ namespace BeerRecommender.Tests
                 throw new ArgumentException("Number of beers does not equal number of users");
             }
 
-            var objects = new List<UserRating>();
-            for (int i = 0; i < beers.Count; ++i)
-            {
-                objects.Add(CreateNewUserRating(users[i], beers[i], Helper.GetRandomRating(Rand)));
-            }
-            return objects;
+            return beers.Select((t, i) => CreateNewUserRating(users[i], t, Helper.GetRandomRating(rand))).ToList();
         }
     }
 }

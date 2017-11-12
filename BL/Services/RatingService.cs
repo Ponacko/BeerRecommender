@@ -11,9 +11,9 @@ namespace BL.Services
 {
     public class RatingService
     {
-        private static BeerRepository beerRepository = new BeerRepository();
-        private static UserRatingRepository userRatingRepository = new UserRatingRepository();
-        private static UserRepository userRepository = new UserRepository();
+        private static readonly BeerRepository BeerRepository = new BeerRepository();
+        private static readonly UserRatingRepository UserRatingRepository = new UserRatingRepository();
+        private static readonly UserRepository UserRepository = new UserRepository();
 
         public static int AddRating(User user, Beer beer, float rating)
         {
@@ -25,14 +25,14 @@ namespace BL.Services
                 IsPrediction = false
             };
             
-            int ratingId = userRatingRepository.Create(userRating);
+            var ratingId = UserRatingRepository.Create(userRating);
 
             beer.UserRatings.Add(userRating);
-            beerRepository.Update(beer);
+            BeerRepository.Update(beer);
             beer.AverageRating = beer.UserRatings.Select(x => x.Rating).Average();
 
             user.UserRatings.Add(userRating);
-            userRepository.Update(user);
+            UserRepository.Update(user);
 
             return ratingId;
         }

@@ -29,7 +29,7 @@ namespace BeerRecommender.Repositories
         }
 
         public void Update(T obj) {
-            entities.AddOrUpdate(obj);
+            context.Entry(obj).State = EntityState.Modified;
             context.SaveChanges();
         }
 

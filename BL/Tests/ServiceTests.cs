@@ -14,12 +14,13 @@ namespace BeerRecommender.Tests
         [Test]
         public void AddRatingTest()
         {
-            var createdUser = Factory.CreateNewUser(userName: "Miso");
+            var createdUser = Factory.CreateNewUser();
             var createdBeer = Factory.CreateNewBeer("Starobrno");
             var urr = new UserRatingRepository();
-            var br = new BeerRepository();
             var ur = new UserRepository();
-            ur.Create(createdUser);
+            var br = new BeerRepository();
+            //ur.Create(createdUser);
+            br.Create(createdBeer);
 
             var createdId = RatingService.AddRating(createdUser, createdBeer, 4.7f);
             var retrieved = urr.RetrieveById(createdId);

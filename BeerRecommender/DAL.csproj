@@ -82,6 +82,10 @@
     <Compile Include="Migrations\201711121717386_added_user_similarity.Designer.cs">
       <DependentUpon>201711121717386_added_user_similarity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711122010290_not_unique_username.cs" />
+    <Compile Include="Migrations\201711122010290_not_unique_username.Designer.cs">
+      <DependentUpon>201711122010290_not_unique_username.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711121717386_added_user_similarity.resx">
       <DependentUpon>201711121717386_added_user_similarity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711122010290_not_unique_username.resx">
+      <DependentUpon>201711122010290_not_unique_username.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
