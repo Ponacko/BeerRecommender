@@ -129,7 +129,7 @@ namespace BeerRecommender
             string category = data.First().SelectSingleNode(".//var").InnerText.Trim();
             string brewery = data.Skip(1).First().SelectSingleNode(".//address/strong").InnerText;
 
-            BreweryRepository breweryRepository = new BreweryRepository(breweryContext);
+            BreweryRepository breweryRepository = new BreweryRepository();
             var assignedBrewery = breweryRepository.RetrieveBreweryByName(brewery);
 
             float rating = 0;

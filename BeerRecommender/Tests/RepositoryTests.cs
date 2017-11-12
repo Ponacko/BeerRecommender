@@ -80,8 +80,8 @@ namespace BeerRecommender.Tests
         public void CreateAndRetrieveRating()
         {
             var createdUser = CreateUser();
-            var createdBrewery = CreateBrewery();
-            var createdRating = CreateUserRating(createdUser, createdBrewery);
+            var createdBeer = CreateBeer();
+            var createdRating = CreateUserRating(createdUser, createdBeer);
             var repository = new UserRatingRepository();
             var insertedId = repository.Create(createdRating);
             var retrievedRating = repository.RetrieveById(insertedId);
@@ -92,8 +92,8 @@ namespace BeerRecommender.Tests
         public void UpdateRating()
         {
             var createdUser = CreateUser();
-            var createdBrewery = CreateBrewery();
-            var createdRating = CreateUserRating(createdUser, createdBrewery);
+            var createdBeer = CreateBeer();
+            var createdRating = CreateUserRating(createdUser, createdBeer);
             var repository = new UserRatingRepository();
             var insertedId = repository.Create(createdRating);
             var newRating = 5f;
@@ -108,8 +108,8 @@ namespace BeerRecommender.Tests
         public void DeleteRating()
         {
             var createdUser = CreateUser();
-            var createdBrewery = CreateBrewery();
-            var createdRating = CreateUserRating(createdUser, createdBrewery);
+            var createdBeer = CreateBeer();
+            var createdRating = CreateUserRating(createdUser, createdBeer);
             var repository = new UserRatingRepository();
             var insertedId = repository.Create(createdRating);
             repository.Delete(insertedId);
@@ -135,11 +135,19 @@ namespace BeerRecommender.Tests
             };
         }
 
-        private static UserRating CreateUserRating(User user, Brewery brewery) {
+        private static UserRating CreateUserRating(User user, Beer beer) {
             return new UserRating() {
                 User = user,
-                Brewery = brewery,
+                Beer = beer,
                 Rating = 0.5f
+            };
+        }
+
+        private static Beer CreateBeer()
+        {
+            return new Beer()
+            {
+                Name = "beername"
             };
         }
     }
