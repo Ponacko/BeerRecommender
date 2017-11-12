@@ -78,6 +78,10 @@
     <Compile Include="Migrations\201711072250234_UserName_length_limit.Designer.cs">
       <DependentUpon>201711072250234_UserName_length_limit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711121717386_added_user_similarity.cs" />
+    <Compile Include="Migrations\201711121717386_added_user_similarity.Designer.cs">
+      <DependentUpon>201711121717386_added_user_similarity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
@@ -115,6 +119,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711072250234_UserName_length_limit.resx">
       <DependentUpon>201711072250234_UserName_length_limit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711121717386_added_user_similarity.resx">
+      <DependentUpon>201711121717386_added_user_similarity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
