@@ -10,7 +10,7 @@ namespace BeerRecommender.Utils
     {
         public static float GetRandomRating(Random random)
         {
-            var rating = random.NextDouble() * 5;
+            var rating = random.NextDouble() * 4 + 1;
             rating = Math.Round(rating, 1);
 
             return (float)rating;

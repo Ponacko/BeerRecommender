@@ -21,14 +21,14 @@ namespace BL.Services
             return Correlation.Pearson(ratings.Select(r => (double)r.Rating1), ratings.Select(r => (double)r.Rating2));
         }
 
-        public static void AddSimilarity(User user1, User user2) {
+        public static int AddSimilarity(User user1, User user2) {
             var similarity = new UserSimilarity() {
                 User1 = user1,
                 User2 = user2,
                 Similarity = CalculateSimilarity(user1, user2)
             };
             var repository = new UserSimilarityRepository();
-            repository.Create(similarity);
+            return repository.Create(similarity);
         }
     }
 }

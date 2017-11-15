@@ -73,19 +73,19 @@ namespace BeerRecommender.Tests
             return objects;
         }
 
-        public ICollection<Brewery> GenerateBreweries(int numberOfUsers)
+        public ICollection<Brewery> GenerateBreweries(int numberOfBreweries)
         {
             var objects = new List<Brewery>();
-            for (var i = 0; i < numberOfUsers; ++i) { objects.Add(CreateNewBrewery()); }
+            for (var i = 0; i < numberOfBreweries; ++i) { objects.Add(CreateNewBrewery()); }
             return objects;
         }
 
-        public ICollection<Beer> GenerateBeers(int numberOfUsers, List<Brewery> breweries = null)
+        public ICollection<Beer> GenerateBeers(int numberOfBeers, List<Brewery> breweries = null)
         {
             var objects = new List<Beer>();
-            for (var i = 0; i < numberOfUsers; ++i)
+            for (var i = 0; i < numberOfBeers; ++i)
             {
-                objects.Add(CreateNewBeer(brewery: breweries[i % breweries.Count]));
+                objects.Add(breweries != null ? CreateNewBeer(brewery: breweries[i%breweries.Count]) : CreateNewBeer());
             }
             return objects;
         }
