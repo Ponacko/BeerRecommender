@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BeerRecommender.Entities
 {
-    public class UserSimilarity
+    public class UserSimilarity : Entity
     {
-        public User user1 { get; set; }
-        public User user2 { get; set; }
+        public User User1 { get; set; }
+        public User User2 { get; set; }
         
-        public int Similarity { get; set; }
+        public double Similarity { get; set; }
     }
 }
