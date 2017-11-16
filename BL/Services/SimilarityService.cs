@@ -37,5 +37,15 @@ namespace BL.Services
         public static double CalculateBias(User user) {
             return user.UserRatings.Average(ur => ur.Rating);
         }
+
+        public static IEnumerable<User> GetMostSimilarUsers(User user, int numberOfUsers) {
+            var userSimilarityRepository = new UserSimilarityRepository();
+            return userSimilarityRepository
+                .RetrieveAll()
+                .FindAll(ur => ur.User1.Equals(user) || ur.User2.Equals(user))
+                .OrderByDescending(ur => ur.Similarity)
+                .Take(numberOfUsers)
+                .Select(ur => ur.User1.Equals(user) ? ur.User2 : ur.User1);
+        }
     }
 }
