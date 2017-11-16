@@ -88,5 +88,26 @@ namespace BeerRecommender.Tests
             var createdId = SimilarityService.AddSimilarity(user1, user2);
             Assert.NotNull(repository.RetrieveById(createdId));
         }
+
+        [Test]
+        public void UpdateAverageRatingTest() {
+            var users = Factory.GenerateUsers(5);
+            var beer = Factory.CreateNewBeer();
+            var br = new BeerRepository();
+            var beerId = br.Create(beer);
+            var repository = new UserRatingRepository();
+            for (var i = 0; i< users.Count; i++) {
+                var rating = new UserRating()
+                {
+                    User = users.ElementAt(i),
+                    Beer = beer,
+                    Rating = i+1,
+                };
+                repository.Create(rating);
+            }
+            RecommendationService.UpdateAverageRating(beer);
+            var retrievedBeer = br.RetrieveById(beerId);
+            Assert.AreEqual(3, retrievedBeer.AverageRating);
+        }
     }
 }
