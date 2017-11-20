@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BeerService.cs" />
     <Compile Include="Services\RatingService.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\SimilarityService.cs" />

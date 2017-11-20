@@ -17,7 +17,7 @@ namespace BeerRecommender
         }
 
         protected override void Seed(AppDbContext context) {
-            if (!context.Breweries.Any() && !context.Beers.Any()) {
+            if (!context.Breweries.Any() || !context.Beers.Any()) {
                 List<HtmlNode> breweries = GetHtmlBreweryNode();
                 UpdateBreweryDb(breweries, context);
 
@@ -46,8 +46,9 @@ namespace BeerRecommender
                 var url = $"http://ceskepivo-ceskezlato.cz/seznam-pivovaru/?pg=" + i;
                 var doc = web.Load(url);
                 Console.WriteLine($"Parsing page {i}/{NUMBER_OF_BREWERY_PAGES} of breweries...");
-                var beers = doc.DocumentNode.SelectNodes("//tr[@class='li item']").ToList();
-                allBreweries.AddRange(beers);
+                var beers = doc?.DocumentNode?.SelectNodes("//tr[@class='li item']")?.ToList();
+                if (beers != null)
+                    allBreweries.AddRange(beers);
             }
             return allBreweries;
         }
