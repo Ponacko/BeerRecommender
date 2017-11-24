@@ -90,6 +90,14 @@
     <Compile Include="Migrations\201711152022226_refactor_similarity.Designer.cs">
       <DependentUpon>201711152022226_refactor_similarity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711231725236_parse_source_change.cs" />
+    <Compile Include="Migrations\201711231725236_parse_source_change.Designer.cs">
+      <DependentUpon>201711231725236_parse_source_change.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711231750085_parse_source_change_beers.cs" />
+    <Compile Include="Migrations\201711231750085_parse_source_change_beers.Designer.cs">
+      <DependentUpon>201711231750085_parse_source_change_beers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
@@ -121,6 +129,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="SourceFiles\pivoteky.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711072240056_InitialCreate.resx">
@@ -137,6 +146,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711152022226_refactor_similarity.resx">
       <DependentUpon>201711152022226_refactor_similarity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711231725236_parse_source_change.resx">
+      <DependentUpon>201711231725236_parse_source_change.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711231750085_parse_source_change_beers.resx">
+      <DependentUpon>201711231750085_parse_source_change_beers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

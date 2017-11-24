@@ -29,7 +29,6 @@ namespace BL
             {
                 Name = "Starobrno",
                 Address = "Mendlak",
-                AverageRating = 1.5f
             };
         }
     }

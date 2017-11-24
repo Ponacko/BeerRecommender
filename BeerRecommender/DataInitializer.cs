@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using HtmlAgilityPack;
-using BeerRecommender.Repositories;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace BeerRecommender
 {
@@ -11,46 +12,172 @@ namespace BeerRecommender
     {
         public const int NUMBER_OF_BREWERY_PAGES = 15;
         public const int NUMBER_OF_BEER_PAGES = 153;
+        public const string SOURCE_FILENAME = "pivoteky.txt";
 
         public DataInitializer(AppDbContext context) {
             Seed(context);
         }
 
-        protected override void Seed(AppDbContext context) {
-            if (!context.Breweries.Any() || !context.Beers.Any()) {
-                List<HtmlNode> breweries = GetHtmlBreweryNode();
-                UpdateBreweryDb(breweries, context);
+        protected override void Seed(AppDbContext context)
+        {
+            if (!context.Breweries.Any() || !context.Beers.Any())
+            {
+                var parsedObjects = ParseBreweriesAndBeers(SOURCE_FILENAME);
 
-                List<HtmlNode> beers = GetHtmlBeerNode();
-                UpdateBeersDb(beers, context);
+                UpdateBreweryDb(parsedObjects.Item1, context);
+                UpdateBeersDb(parsedObjects.Item2, context);
             }
             base.Seed(context);
         }
 
-        private static void UpdateBreweryDb(List<HtmlNode> breweries, AppDbContext context)
+        private static Tuple<List<Brewery>, List<Beer>> ParseBreweriesAndBeers(string sourceFileName)
+        {
+            var breweryList = new List<Brewery>();
+            var beerList = new List<Beer>();
+
+            string dirpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            string path = Path.Combine(dirpath, @"SourceFiles\" + sourceFileName);
+
+            int lines = File.ReadAllLines(path).Length;
+            int counter = 0;
+            using (StreamReader sr = new StreamReader(path))
+            {
+                while (sr.Peek() >= 0)
+                {
+                    Console.WriteLine($"Parsing Brewery {++counter}/{lines}");
+                    string url = sr.ReadLine();
+                    var web = new HtmlWeb();
+                    var doc = web.Load(url);
+
+                    var brewery = GetBreweryFromDocument(doc);
+                    if (brewery.Type.Contains("uzavřen"))
+                    {
+                        Console.WriteLine("  -Brewery has been closed. Skipping...");
+                        continue;
+                    }
+                    breweryList.Add(brewery);
+                    beerList.AddRange(GetBeersFromDocument(doc, brewery));
+                }
+            }
+
+            return new Tuple<List<Brewery>, List<Beer>>(breweryList, beerList);
+        }
+
+        private static string getBreweryAttributeFromDocument(HtmlDocument doc, string attributeName, int index = -1)
+        {
+            if (index != -1)
+            {
+                return doc?.DocumentNode?.SelectNodes($"//table[@class='info']//td[@title='{attributeName}']")?.ToList()[index]?.InnerText;
+            }
+            return doc?.DocumentNode?.SelectNodes($"//table[@class='info']//td[@title='{attributeName}']")?.ToList()?.First()?.InnerText;
+        }
+
+        private static Brewery GetBreweryFromDocument(HtmlDocument doc)
+        {
+            Regex cityRegex = new Regex("(.)*(nbsp;)");
+
+            string name = getBreweryAttributeFromDocument(doc, "Jméno pivovaru");
+            string type = getBreweryAttributeFromDocument(doc, "Typ pivovaru");
+            string address = getBreweryAttributeFromDocument(doc, "Adresa pivovaru");
+            string city = cityRegex.Replace(getBreweryAttributeFromDocument(doc, "Adresa pivovaru", 1), "");
+            string region = getBreweryAttributeFromDocument(doc, "Adresa pivovaru", 2);
+            string webSite = getBreweryAttributeFromDocument(doc, "Domovské stránky");
+
+            string imageRelativeUrl = doc?.DocumentNode?.SelectNodes("//img[@class='logotyp']")?.ToList()?.First()?.GetAttributeValue("src", null);
+            string foundationYearString = doc?.DocumentNode?.SelectNodes("//span[@title='Založení pivovaru']")?.ToList()?.First()?.InnerText;
+            int yearOfFoundation = 0;
+
+            if (foundationYearString != null)
+            {
+                int.TryParse(Regex.Match(foundationYearString, @"\d+").Value, out yearOfFoundation);
+            }
+
+            var brewery = new Brewery()
+            {
+                Id = 1,
+                Name = name,
+                Type = type,
+                YearOfFoundation = yearOfFoundation,
+                City = city,
+                Address = address,
+                Region = region,
+                WebSiteUrl = webSite,
+                ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl
+            };
+            return brewery;
+        }
+
+        private static List<Beer> GetBeersFromDocument(HtmlDocument doc, Brewery brewery)
+        {
+            var beersForBrewery = new List<Beer>();
+            var tableElements = doc?.DocumentNode?.SelectNodes("//div[@class='beer-box']")?.ToList();
+            if (tableElements != null)
+            {
+                for (var i = 0; i < tableElements.Count; i++)
+                {
+                    Console.WriteLine($"    Parsing Beer {i + 1}/{tableElements.Count}");
+                    var beer = GetBeerFromNode(tableElements[i], brewery);
+                    if (beer.Description.Contains("Vaření piva ukončeno."))
+                    {
+                        Console.WriteLine($"    --Beer is now longer being brewed. Skipping...");
+                        continue;
+                    }
+                    beersForBrewery.Add(beer);
+                }
+            }
+            return beersForBrewery;
+        }
+
+        private static Beer GetBeerFromNode(HtmlNode node, Brewery brewery)
+        {
+            Regex cityRegex = new Regex("(.)*(nbsp;)");
+            string name = node.SelectSingleNode(".//div[@class='beer-title']//h4")?.InnerText;
+            string description = node.SelectSingleNode(".//div[@class='beer-text']")?.InnerText;
+            string tags = node.SelectSingleNode(".//div[@class='beer-spec']//span")?.InnerText;
+            string epmAndAlcohol = node.SelectNodes(".//div[@class='beer-spec']/strong")?.ToList()?.Last().InnerText;
+
+            double epm = 0.0;
+            double alcoholContent = 0.0;
+            if (epmAndAlcohol != null)
+            {
+                var splitString = epmAndAlcohol.Split('/');
+                if (splitString.Count() >= 1) double.TryParse(Regex.Match(epmAndAlcohol.Split('/').First(), @"([0-9]*[.])?[0-9]+").Value, out epm);
+                if (splitString.Count() == 2) double.TryParse(Regex.Match(epmAndAlcohol.Split('/').Last(), @"([0-9]*[.])?[0-9]+").Value, out alcoholContent);
+            }
+
+            string imageRelativeUrl = node.SelectSingleNode(".//div[@class='beer-view']//img")?.GetAttributeValue("src", null);
+
+            var beer = new Beer()
+            {
+                Id = 1,
+                Name = name,
+                Description = description,
+                Epm = epm,
+                AlcoholContentPercentage = alcoholContent,
+                Category = tags,
+                Brewery = brewery,
+                ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl,
+            };
+
+            return beer;
+        }
+
+        private static void UpdateBreweryDb(List<Brewery> breweries, AppDbContext context)
         {
             foreach (var b in breweries)
             {
-                Brewery brewery = GetBreweryFromNode(b);
-                AddBreweryToDb(context, brewery);
+                AddBreweryToDb(context, b);
             }
             context.SaveChanges();
         }
 
-        private static List<HtmlNode> GetHtmlBreweryNode()
+        private static void UpdateBeersDb(List<Beer> beers, AppDbContext context)
         {
-            List<HtmlNode> allBreweries = new List<HtmlNode>();
-            for (int i = 1; i <= NUMBER_OF_BREWERY_PAGES; i++)
+            foreach (var b in beers)
             {
-                var web = new HtmlWeb();
-                var url = $"http://ceskepivo-ceskezlato.cz/seznam-pivovaru/?pg=" + i;
-                var doc = web.Load(url);
-                Console.WriteLine($"Parsing page {i}/{NUMBER_OF_BREWERY_PAGES} of breweries...");
-                var beers = doc?.DocumentNode?.SelectNodes("//tr[@class='li item']")?.ToList();
-                if (beers != null)
-                    allBreweries.AddRange(beers);
+                AddBeerToDb(context, b);
             }
-            return allBreweries;
+            context.SaveChanges();
         }
 
         private static void AddBreweryToDb(AppDbContext context, Brewery brewery)
@@ -82,35 +209,9 @@ namespace BeerRecommender
                 YearOfFoundation = yearOfFoundation,
                 City = city,
                 Address = address,
-                AverageRating = 0,
                 ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl
             };
             return brewery;
-        }
-
-        private static void UpdateBeersDb(List<HtmlNode> beers, AppDbContext context)
-        {
-            foreach (var b in beers)
-            {
-                Beer beer = GetBeerFromNode(b, context);
-                AddBeerToDb(context, beer);
-            }
-            context.SaveChanges();
-        }
-
-        private static List<HtmlNode> GetHtmlBeerNode()
-        {
-            List<HtmlNode> allBeers = new List<HtmlNode>();
-            for (int i = 1; i <= NUMBER_OF_BEER_PAGES; i++)
-            {
-                var web = new HtmlWeb();
-                var url = $"http://ceskepivo-ceskezlato.cz/seznam-piv/?pg=" + i;
-                var doc = web.Load(url);
-                Console.WriteLine($"Parsing page {i}/{NUMBER_OF_BEER_PAGES} of beers...");
-                var beers = doc.DocumentNode.SelectNodes("//tr[@class='li item']").ToList();
-                allBeers.AddRange(beers);
-            }
-            return allBeers;
         }
 
         private static void AddBeerToDb(AppDbContext context, Beer beer)
@@ -119,32 +220,6 @@ namespace BeerRecommender
             {
                 context.Beers.Add(beer);
             }
-        }
-
-        private static Beer GetBeerFromNode(HtmlNode b, AppDbContext breweryContext)
-        {
-            string imageRelativeUrl = b.SelectSingleNode(".//img").GetAttributeValue("src", null).Trim();
-            var data = b.SelectNodes(".//td[@class='line']");
-
-            string name = data.First().SelectSingleNode(".//label").InnerText.Trim();
-            string category = data.First().SelectSingleNode(".//var").InnerText.Trim();
-            string brewery = data.Skip(1).First().SelectSingleNode(".//address/strong").InnerText;
-
-            BreweryRepository breweryRepository = new BreweryRepository(breweryContext);
-            var assignedBrewery = breweryRepository.RetrieveBreweryByName(brewery);
-
-            float rating = 0;
-            var beer = new Beer()
-            {
-                Id = 1,
-                Name = name,
-                Epm = "0",
-                Category = category,
-                Brewery = assignedBrewery,
-                ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl,
-                AverageRating = rating
-            };
-            return beer;
         }
     }
 }

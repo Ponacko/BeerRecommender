@@ -21,8 +21,10 @@ namespace BeerRecommender
         [Required]
         public string Name { get; set; }
         // Stupnovitost piva
-        public string Epm { get; set; }
+        public double Epm { get; set; }
+        public double AlcoholContentPercentage { get; set; }
         public string Category { get; set; }
+        public string Description { get; set; }
         public Brewery Brewery { get; set; }
         public string ImageUrl { get; set; }
         public float AverageRating { get; set; } = 0;

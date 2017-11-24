@@ -14,11 +14,13 @@ namespace BeerRecommender
         public string Name { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
+        public string Region { get; set; }
+        public string Type { get; set; }
+        public string WebSiteUrl { get; set; }
 
         [Range(0, int.MaxValue)]
         public int YearOfFoundation { get; set; }
         public string ImageUrl { get; set; }
-        public float AverageRating { get; set; }
 
         public virtual ICollection<Beer> Beers { get; set; }
 
