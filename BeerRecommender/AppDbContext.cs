@@ -10,8 +10,6 @@ namespace BeerRecommender
         }
         public DbSet<Brewery> Breweries { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserRating> UserRatings { get; set; }
-        public DbSet<UserSimilarity> UserSimilarities { get; set; }
         public DbSet<Beer> Beers { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace BeerRecommender.Tests
     {
         private readonly Random rand = new Random();
 
-        public Beer CreateNewBeer(string name = null, Brewery brewery = null, string category = null, string imageUrl = null, List<UserRating> ratings = null)
+        public Beer CreateNewBeer(string name = null, Brewery brewery = null, string category = null, string imageUrl = null)
         {
             var beer = new Beer
             {
@@ -19,8 +19,7 @@ namespace BeerRecommender.Tests
                 ImageUrl = imageUrl,
                 Category = category ?? "světlý ležák",
                 Brewery = brewery,
-                AverageRating = Helper.GetRandomRating(rand),
-                UserRatings = ratings
+                AverageRating = Helper.GetRandomRating(rand)
             };
 
             return beer;
@@ -40,30 +39,16 @@ namespace BeerRecommender.Tests
             return brewery;
         }
 
-        public User CreateNewUser(string userName = null, ICollection<UserRating> ratings = null) {
+        public User CreateNewUser(string userName = null) {
             var name = userName ?? Guid.NewGuid().ToString().Substring(0, 15);
             var user = new User
             {
                 UserName = name,
-                UserRatings = ratings,
                 Email = $"{name}@{name}.com",
                 Age = 20
             };
 
             return user;
-        }
-
-        public UserRating CreateNewUserRating(User user, Beer beer, float rating = 2.5f, bool isPrediction = false)
-        {
-            var userRating = new UserRating
-            {
-                Beer = beer,
-                User = user,
-                Rating = rating,
-                IsPrediction = isPrediction
-            };
-
-            return userRating;
         }
 
         public ICollection<User> GenerateUsers(int numberOfUsers)
@@ -88,16 +73,6 @@ namespace BeerRecommender.Tests
                 objects.Add(breweries != null ? CreateNewBeer(brewery: breweries[i%breweries.Count]) : CreateNewBeer());
             }
             return objects;
-        }
-
-        public ICollection<UserRating> GenerateUserRatings(List<Beer> beers, List<User> users) 
-        {
-            if (beers.Count != users.Count)
-            {
-                throw new ArgumentException("Number of beers does not equal number of users");
-            }
-
-            return beers.Select((t, i) => CreateNewUserRating(users[i], t, Helper.GetRandomRating(rand))).ToList();
         }
     }
 }

@@ -7,10 +7,7 @@ namespace BeerRecommender
 {
     public class User : Entity
     {
-        public User()
-        {
-            UserRatings = new List<UserRating>();
-        }
+        public User(){}
         
         [StringLength(100)]
         [Required(ErrorMessage = "Invalid Username")]
@@ -25,7 +22,6 @@ namespace BeerRecommender
         [Required]
         [Range(18, 200)]
         public int Age { get; set; }
-
-        public virtual ICollection<UserRating> UserRatings { get; set; }
+        
     }
 }

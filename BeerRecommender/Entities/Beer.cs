@@ -15,7 +15,6 @@ namespace BeerRecommender
     {
         public Beer()
         {
-            UserRatings = new List<UserRating>();
         }
 
         [Required]
@@ -28,8 +27,6 @@ namespace BeerRecommender
         public Brewery Brewery { get; set; }
         public string ImageUrl { get; set; }
         public float AverageRating { get; set; } = 0;
-
-        public virtual List<UserRating> UserRatings { get; set; }
 
         public override string ToString()
         {

@@ -77,47 +77,5 @@ namespace BeerRecommender.Tests
 
             Assert.IsNull(user);
         }
-
-        [Test]
-        public void CreateAndRetrieveRating()
-        {
-            var createdUser = Factory.CreateNewUser();
-            var createdBeer = Factory.CreateNewBeer();
-            var createdRating = Factory.CreateNewUserRating(createdUser, createdBeer);
-            var repository = new UserRatingRepository();
-            var insertedId = repository.Create(createdRating);
-            var retrievedRating = repository.RetrieveById(insertedId);
-            Assert.AreEqual(createdRating, retrievedRating);
-        }
-
-        [Test]
-        public void UpdateRating()
-        {
-            var createdUser = Factory.CreateNewUser();
-            var createdBeer = Factory.CreateNewBeer();
-            var createdRating = Factory.CreateNewUserRating(createdUser, createdBeer);
-            var repository = new UserRatingRepository();
-            var insertedId = repository.Create(createdRating);
-            var newRating = 5f;
-            createdRating.Rating = newRating;
-            repository.Update(createdRating);
-
-            var retrievedRating = repository.RetrieveById(insertedId);
-            Assert.AreEqual(newRating, retrievedRating.Rating);
-        }
-
-        [Test]
-        public void DeleteRating()
-        {
-            var createdUser = Factory.CreateNewUser();
-            var createdBeer = Factory.CreateNewBeer();
-            var createdRating = Factory.CreateNewUserRating(createdUser, createdBeer);
-            var repository = new UserRatingRepository();
-            var insertedId = repository.Create(createdRating);
-            repository.Delete(insertedId);
-            var rating = repository.RetrieveById(insertedId);
-
-            Assert.IsNull(rating);
-        }
     }
 }
