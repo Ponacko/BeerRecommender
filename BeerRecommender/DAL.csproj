@@ -69,6 +69,8 @@
     <Compile Include="Entities\Beer.cs" />
     <Compile Include="Entities\Brewery.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Region.cs" />
+    <Compile Include="Entities\Tag.cs" />
     <Compile Include="Migrations\201711072240056_InitialCreate.cs" />
     <Compile Include="Migrations\201711072240056_InitialCreate.Designer.cs">
       <DependentUpon>201711072240056_InitialCreate.cs</DependentUpon>

@@ -51,20 +51,7 @@ namespace BeerRecommender.Tests
             var retrievedUser = repository.RetrieveById(insertedId);
             Assert.AreEqual(createdUser, retrievedUser);
         }
-
-        [Test]
-        public void UpdateUser()
-        {
-            var createdUser = Factory.CreateNewUser();
-            var repository = new UserRepository();
-            var insertedId = repository.Create(createdUser);
-            const string newName = "test2";
-            createdUser.UserName = newName;
-            repository.Update(createdUser);
-
-            var retrievedUser = repository.RetrieveById(insertedId);
-            Assert.AreEqual(newName, retrievedUser.UserName);
-        }
+        
 
         [Test]
         public void DeleteUser()

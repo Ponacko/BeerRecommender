@@ -15,10 +15,17 @@ namespace BeerRecommender
     {
         public Beer()
         {
+            PickedByUsers = new List<User>();
+            RecommendedForUsers = new List<User>();
+            Tags = new List<Tag>();
         }
 
         [Required]
         public string Name { get; set; }
+        public List<User> PickedByUsers { get; set; }
+        public List<User> RecommendedForUsers { get; set; }
+        public List<Tag> Tags { get; set; }
+        public bool IsPopular { get; set; }
         // Stupnovitost piva
         public double Epm { get; set; }
         public double AlcoholContentPercentage { get; set; }
@@ -26,11 +33,10 @@ namespace BeerRecommender
         public string Description { get; set; }
         public Brewery Brewery { get; set; }
         public string ImageUrl { get; set; }
-        public float AverageRating { get; set; } = 0;
 
         public override string ToString()
         {
-            return $"Beer [{Name}] with EPM [{Epm}] with rating [{AverageRating}] of type [{Category}], image available at [{ImageUrl}]";
+            return $"Beer [{Name}] with EPM [{Epm}]  of type [{Category}], image available at [{ImageUrl}]";
         }
     }
 }

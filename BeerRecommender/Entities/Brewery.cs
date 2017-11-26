@@ -12,9 +12,11 @@ namespace BeerRecommender
         
         [Required]
         public string Name { get; set; }
+
+        public Region Region { get; set; }
+        public string RegionString { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
-        public string Region { get; set; }
         public string Type { get; set; }
         public string WebSiteUrl { get; set; }
 

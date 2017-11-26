@@ -7,21 +7,13 @@ namespace BeerRecommender
 {
     public class User : Entity
     {
-        public User(){}
-        
-        [StringLength(100)]
-        [Required(ErrorMessage = "Invalid Username")]
-        public string UserName { get; set; }
+        public User() {
+            PickedBeers = new List<Beer>();
+            RecommendedBeers = new List<Beer>();
+        }
 
-        [Index(IsUnique = true)]
-        [StringLength(100)]
-        [Required]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public string Email { get; set; }
-
-        [Required]
-        [Range(18, 200)]
-        public int Age { get; set; }
-        
+        public Region Region { get; set; }
+        public List<Beer> PickedBeers { get; set; }
+        public List<Beer> RecommendedBeers { get; set; }
     }
 }

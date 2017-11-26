@@ -11,5 +11,7 @@ namespace BeerRecommender
         public DbSet<Brewery> Breweries { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Beer> Beers { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Region> Regions { get; set; }
     }
 }

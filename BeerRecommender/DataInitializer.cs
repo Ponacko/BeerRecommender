@@ -100,7 +100,7 @@ namespace BeerRecommender
                 YearOfFoundation = yearOfFoundation,
                 City = city,
                 Address = address,
-                Region = region,
+                RegionString = region,
                 WebSiteUrl = webSite,
                 ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl
             };

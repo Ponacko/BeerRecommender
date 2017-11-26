@@ -11,6 +11,10 @@ namespace BeerRecommender.Tests
     {
         private readonly Random rand = new Random();
 
+        public User CreateNewUser() {
+            return new User();
+        }
+
         public Beer CreateNewBeer(string name = null, Brewery brewery = null, string category = null, string imageUrl = null)
         {
             var beer = new Beer
@@ -18,8 +22,7 @@ namespace BeerRecommender.Tests
                 Name = name ?? Guid.NewGuid().ToString(),
                 ImageUrl = imageUrl,
                 Category = category ?? "světlý ležák",
-                Brewery = brewery,
-                AverageRating = Helper.GetRandomRating(rand)
+                Brewery = brewery
             };
 
             return beer;
@@ -38,25 +41,7 @@ namespace BeerRecommender.Tests
 
             return brewery;
         }
-
-        public User CreateNewUser(string userName = null) {
-            var name = userName ?? Guid.NewGuid().ToString().Substring(0, 15);
-            var user = new User
-            {
-                UserName = name,
-                Email = $"{name}@{name}.com",
-                Age = 20
-            };
-
-            return user;
-        }
-
-        public ICollection<User> GenerateUsers(int numberOfUsers)
-        {
-            var objects = new List<User>();
-            for (var i = 0; i < numberOfUsers; ++i) { objects.Add(CreateNewUser()); }
-            return objects;
-        }
+        
 
         public ICollection<Brewery> GenerateBreweries(int numberOfBreweries)
         {

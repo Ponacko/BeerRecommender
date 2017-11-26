@@ -11,14 +11,8 @@ namespace BL.Services
 {
     public static class UserService
     {
-        public static bool CreateUser(string userName, int age, string email)
-        {
-            User user = new User()
-            {
-                UserName = userName,
-                Email = email,
-                Age = age
-            };
+        public static bool CreateUser(string userName, int age, string email) {
+            User user = new User();
 
             UserRepository userRepo = new UserRepository();
             try

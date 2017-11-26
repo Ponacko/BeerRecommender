@@ -15,14 +15,6 @@ namespace BL
             //UserService.CreateUser("Pubey", 18, "addd@gmail.com");
         }
 
-        private static User CreateUser()
-        {
-            return new User()
-            {
-                UserName = "Miso"
-            };
-        }
-
         private static Brewery CreateBrewery()
         {
             return new Brewery()
