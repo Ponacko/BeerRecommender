@@ -99,6 +99,10 @@
     <Compile Include="Migrations\201711231750085_parse_source_change_beers.Designer.cs">
       <DependentUpon>201711231750085_parse_source_change_beers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711261754157_rework_entities.cs" />
+    <Compile Include="Migrations\201711261754157_rework_entities.Designer.cs">
+      <DependentUpon>201711261754157_rework_entities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
@@ -150,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711231750085_parse_source_change_beers.resx">
       <DependentUpon>201711231750085_parse_source_change_beers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711261754157_rework_entities.resx">
+      <DependentUpon>201711261754157_rework_entities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
