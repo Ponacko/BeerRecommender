@@ -5,6 +5,7 @@ using System.Linq;
 using HtmlAgilityPack;
 using System.IO;
 using System.Text.RegularExpressions;
+using BeerRecommender.Entities;
 
 namespace BeerRecommender
 {
@@ -25,6 +26,8 @@ namespace BeerRecommender
                 var parsedObjects = ParseBreweriesAndBeers(SOURCE_FILENAME);
 
                 UpdateBreweryDb(parsedObjects.Item1, context);
+                // Send beers because they contain tags from parsing
+                UpdateTagsDb(parsedObjects.Item2, context);
                 UpdateBeersDb(parsedObjects.Item2, context);
             }
             base.Seed(context);
@@ -136,6 +139,27 @@ namespace BeerRecommender
             string tags = node.SelectSingleNode(".//div[@class='beer-spec']//span")?.InnerText;
             string epmAndAlcohol = node.SelectNodes(".//div[@class='beer-spec']/strong")?.ToList()?.Last().InnerText;
 
+            RegexOptions options = RegexOptions.None;
+            Regex regex = new Regex("[ ]{2,}", options);
+            var cleanedTags = regex.Replace(tags, " ");
+            var stringTagList = cleanedTags.Split(' ').Where(t => t != "");
+
+            var tagsList = new List<Tag>();
+            foreach (var stringTag in stringTagList)
+            {
+                string tagName = stringTag.Trim();
+                if (stringTag.Length < 4) continue;
+                if (stringTag.Last() == 'ý')
+                    tagName = stringTag.Remove(stringTag.Length - 1, 1) + "é";
+
+                var tag = new Tag
+                {
+                    Id = 1,
+                    Name = tagName
+                };
+                tagsList.Add(tag);
+            }
+            
             double epm = 0.0;
             double alcoholContent = 0.0;
             if (epmAndAlcohol != null)
@@ -157,6 +181,7 @@ namespace BeerRecommender
                 Category = tags,
                 Brewery = brewery,
                 ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl,
+                Tags = tagsList
             };
 
             return beer;
@@ -185,6 +210,27 @@ namespace BeerRecommender
             if (!context.Breweries.Any(c => c.Name == brewery.Name))
             {
                 context.Breweries.Add(brewery);
+            }
+        }
+
+        private static void UpdateTagsDb(List<Beer> beers, AppDbContext context)
+        {
+            // flatten tags from beerList to one list then make set to remove duplicates
+            var tagList = beers.SelectMany(i => i.Tags).ToList();
+            var tagSet = new HashSet<Tag>(tagList);
+
+            foreach (var t in tagSet)
+            {
+                AddTagToDb(context, t);
+            }
+            context.SaveChanges();
+        }
+
+        private static void AddTagToDb(AppDbContext context, Tag tag)
+        {
+            if (!context.Tags.Any(c => c.Name == tag.Name))
+            {
+                context.Tags.Add(tag);
             }
         }
 
