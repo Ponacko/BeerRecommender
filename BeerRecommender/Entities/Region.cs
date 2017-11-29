@@ -13,6 +13,7 @@ namespace BeerRecommender.Entities
             Users = new List<User>();
         }
         public string Name { get; set; }
+        public string Abbreviation { get; set; }
         public List<Brewery> Breweries { get; set; }
         public List<User> Users { get; set; }
     }

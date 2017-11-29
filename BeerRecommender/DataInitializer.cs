@@ -6,14 +6,29 @@ using HtmlAgilityPack;
 using System.IO;
 using System.Text.RegularExpressions;
 using BeerRecommender.Entities;
+using System.Collections.ObjectModel;
 
 namespace BeerRecommender
 {
     public class DataInitializer : CreateDatabaseIfNotExists<AppDbContext>
     {
+        #region Constants
+
         public const int NUMBER_OF_BREWERY_PAGES = 15;
         public const int NUMBER_OF_BEER_PAGES = 153;
         public const string SOURCE_FILENAME = "pivoteky.txt";
+        public static readonly IList<String> RegionNames = new ReadOnlyCollection<string>
+        (new List<String> {
+         "Praha", "Středočeský kraj", "Jihočeský kraj", "Plzeňský kraj",
+         "Karlovarský kraj", "Ústecký kraj", "Liberecký kraj", "Královéhradecký kraj", "Pardubický kraj",
+         "Kraj Vysočina", "Jihomoravský kraj", "Olomoucký kraj", "Moravskoslezský kraj", "Zlínský kraj" });
+        public static readonly IList<String> RegionAbbreviations = new ReadOnlyCollection<string>
+        (new List<String> {
+         "Praha", "Středo", "Jihočes", "Plzeň",
+         "Karlo", "Ústec", "Liber", "Králov", "Pardub",
+         "Kraj Vys", "Jihomor", "Olom", "Morav", "Zlín" });
+
+        #endregion
 
         public DataInitializer(AppDbContext context) {
             Seed(context);
@@ -24,8 +39,9 @@ namespace BeerRecommender
             if (!context.Breweries.Any() || !context.Beers.Any())
             {
                 var parsedObjects = ParseBreweriesAndBeers(SOURCE_FILENAME);
-
+               
                 UpdateBreweryDb(parsedObjects.Item1, context);
+                UpdateRegionDb(parsedObjects.Item3, context);
                 // Send beers because they contain tags from parsing
                 UpdateTagsDb(parsedObjects.Item2, context);
                 UpdateBeersDb(parsedObjects.Item2, context);
@@ -33,13 +49,32 @@ namespace BeerRecommender
             base.Seed(context);
         }
 
-        private static Tuple<List<Brewery>, List<Beer>> ParseBreweriesAndBeers(string sourceFileName)
+        private static List<Region> PrepareRegionEntities()
+        {
+            var regions = new List<Region>();
+            for(var i = 0; i < RegionNames.Count; i++)
+            {
+                var region = new Region
+                {
+                    Id = 1,
+                    Name = RegionNames[i],
+                    Abbreviation = RegionAbbreviations[i],
+                    Breweries = new List<Brewery>()
+                };
+                regions.Add(region);
+            }
+            return regions;
+        }
+
+        private static Tuple<List<Brewery>, List<Beer>, List<Region>> ParseBreweriesAndBeers(string sourceFileName)
         {
             var breweryList = new List<Brewery>();
             var beerList = new List<Beer>();
 
             string dirpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             string path = Path.Combine(dirpath, @"SourceFiles\" + sourceFileName);
+
+            var regionList = PrepareRegionEntities();
 
             int lines = File.ReadAllLines(path).Length;
             int counter = 0;
@@ -52,7 +87,7 @@ namespace BeerRecommender
                     var web = new HtmlWeb();
                     var doc = web.Load(url);
 
-                    var brewery = GetBreweryFromDocument(doc);
+                    var brewery = GetBreweryFromDocument(doc, ref regionList);
                     if (brewery.Type.Contains("uzavřen"))
                     {
                         Console.WriteLine("  -Brewery has been closed. Skipping...");
@@ -63,8 +98,10 @@ namespace BeerRecommender
                 }
             }
 
-            return new Tuple<List<Brewery>, List<Beer>>(breweryList, beerList);
+            return new Tuple<List<Brewery>, List<Beer>, List<Region>>(breweryList, beerList, regionList);
         }
+
+        #region BreweryParsing
 
         private static string getBreweryAttributeFromDocument(HtmlDocument doc, string attributeName, int index = -1)
         {
@@ -75,7 +112,7 @@ namespace BeerRecommender
             return doc?.DocumentNode?.SelectNodes($"//table[@class='info']//td[@title='{attributeName}']")?.ToList()?.First()?.InnerText;
         }
 
-        private static Brewery GetBreweryFromDocument(HtmlDocument doc)
+        private static Brewery GetBreweryFromDocument(HtmlDocument doc, ref List<Region> regions)
         {
             Regex cityRegex = new Regex("(.)*(nbsp;)");
 
@@ -83,7 +120,7 @@ namespace BeerRecommender
             string type = getBreweryAttributeFromDocument(doc, "Typ pivovaru");
             string address = getBreweryAttributeFromDocument(doc, "Adresa pivovaru");
             string city = cityRegex.Replace(getBreweryAttributeFromDocument(doc, "Adresa pivovaru", 1), "");
-            string region = getBreweryAttributeFromDocument(doc, "Adresa pivovaru", 2);
+            string regionName = getBreweryAttributeFromDocument(doc, "Adresa pivovaru", 2);
             string webSite = getBreweryAttributeFromDocument(doc, "Domovské stránky");
 
             string imageRelativeUrl = doc?.DocumentNode?.SelectNodes("//img[@class='logotyp']")?.ToList()?.First()?.GetAttributeValue("src", null);
@@ -95,6 +132,8 @@ namespace BeerRecommender
                 int.TryParse(Regex.Match(foundationYearString, @"\d+").Value, out yearOfFoundation);
             }
 
+            var result = regions.Where(r => regionName.StartsWith(r.Abbreviation));
+            var breweryRegion = result.Any() ? result.First() : null; 
             var brewery = new Brewery()
             {
                 Id = 1,
@@ -103,12 +142,19 @@ namespace BeerRecommender
                 YearOfFoundation = yearOfFoundation,
                 City = city,
                 Address = address,
-                RegionString = region,
+                Region = breweryRegion,
                 WebSiteUrl = webSite,
                 ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl
             };
+
+            if ( breweryRegion != null ) breweryRegion.Breweries.Add(brewery);
+
             return brewery;
         }
+
+        #endregion
+
+        #region BeerParsing
 
         private static List<Beer> GetBeersFromDocument(HtmlDocument doc, Brewery brewery)
         {
@@ -187,6 +233,8 @@ namespace BeerRecommender
             return beer;
         }
 
+        #endregion
+
         private static void UpdateBreweryDb(List<Brewery> breweries, AppDbContext context)
         {
             foreach (var b in breweries)
@@ -205,14 +253,6 @@ namespace BeerRecommender
             context.SaveChanges();
         }
 
-        private static void AddBreweryToDb(AppDbContext context, Brewery brewery)
-        {
-            if (!context.Breweries.Any(c => c.Name == brewery.Name))
-            {
-                context.Breweries.Add(brewery);
-            }
-        }
-
         private static void UpdateTagsDb(List<Beer> beers, AppDbContext context)
         {
             // flatten tags from beerList to one list then make set to remove duplicates
@@ -226,6 +266,23 @@ namespace BeerRecommender
             context.SaveChanges();
         }
 
+        private static void UpdateRegionDb(List<Region> regions, AppDbContext context)
+        {
+            foreach (var r in regions)
+            {
+                AddRegionToDb(context, r);
+            }
+            context.SaveChanges();
+        }
+
+        private static void AddBreweryToDb(AppDbContext context, Brewery brewery)
+        {
+            if (!context.Breweries.Any(c => c.Name == brewery.Name))
+            {
+                context.Breweries.Add(brewery);
+            }
+        }
+
         private static void AddTagToDb(AppDbContext context, Tag tag)
         {
             if (!context.Tags.Any(c => c.Name == tag.Name))
@@ -234,37 +291,19 @@ namespace BeerRecommender
             }
         }
 
-        private static Brewery GetBreweryFromNode(HtmlNode b)
-        {
-            string imageRelativeUrl = b.SelectSingleNode(".//img").GetAttributeValue("src", null).Trim();
-            var data = b.SelectNodes(".//td[@class='line']");
-
-            int yearOfFoundation;
-            int.TryParse(data.First().SelectSingleNode(".//abbr").InnerText.Trim(), out yearOfFoundation);
-            string name = data.First().SelectSingleNode(".//label").InnerText.Trim();
-            string city = data.Skip(1).First().SelectSingleNode(".//address/strong").InnerText.Trim();
-       
-            string address = data.Skip(1).First().SelectSingleNode(".//address").InnerText.Trim();
-            int index = address.IndexOf(city);
-            string cleanAddress = (index < 0) ? address : address.Remove(index, city.Length);
-
-            var brewery = new Brewery()
-            {
-                Id = 1,
-                Name = name,
-                YearOfFoundation = yearOfFoundation,
-                City = city,
-                Address = address,
-                ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl
-            };
-            return brewery;
-        }
-
         private static void AddBeerToDb(AppDbContext context, Beer beer)
         {
             if (!context.Beers.Any(c => c.Name == beer.Name))
             {
                 context.Beers.Add(beer);
+            }
+        }
+
+        private static void AddRegionToDb(AppDbContext context, Region region)
+        {
+            if (!context.Regions.Any(c => c.Name == region.Name))
+            {
+                context.Regions.Add(region);
             }
         }
     }

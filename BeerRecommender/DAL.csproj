@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201711261754157_rework_entities.Designer.cs">
       <DependentUpon>201711261754157_rework_entities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711291928582_region_abbreviations.cs" />
+    <Compile Include="Migrations\201711291928582_region_abbreviations.Designer.cs">
+      <DependentUpon>201711291928582_region_abbreviations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
@@ -159,6 +163,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711261754157_rework_entities.resx">
       <DependentUpon>201711261754157_rework_entities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711291928582_region_abbreviations.resx">
+      <DependentUpon>201711291928582_region_abbreviations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
