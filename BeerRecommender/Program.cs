@@ -9,13 +9,7 @@ namespace BeerRecommender
     class Program
     {
         static void Main(string[] args) {
-            /*BeerRepository br = new BeerRepository();
-            TagRepository tr = new TagRepository();
-            List<Beer> beers = br.RetrieveBeerByTag(
-                tr.RetrieveTagByName("světlé"));
-            beers.ForEach(Console.WriteLine);
-            Console.ReadLine();*/
-            using (var context = new AppDbContext())
+            /*using (var context = new AppDbContext())
             {
                 //PrintBreweriesFromDb(context);
                 //PrintBeersFromDb(context);
@@ -27,7 +21,7 @@ namespace BeerRecommender
 
                 PrintNamesOfPopularBeers(context);
             }
-            Console.ReadLine();
+            Console.ReadLine();*/
         }
 
         private static void PrintNamesOfPopularBeers(AppDbContext context)

@@ -10,13 +10,29 @@ namespace BL.Services
 {
     public class BeerService
     {
-        public static List<Beer> GetAllBeers() {
+        public static List<Beer> GetAllBeers()
+        {
             var repository = new BeerRepository();
             return repository.RetrieveAll();
         }
 
-        public static List<Beer> GetPopularBeers() {
+        public static List<Beer> GetPopularBeers()
+        {
             return GetAllBeers().FindAll(b => b.IsPopular).ToList();
+        }
+
+        public static List<Beer> RecommendRandomBeers(int numberOfBeers)
+        {
+            BeerRepository br = new BeerRepository();
+            var beers = br.RetrieveAll();
+            var random = new Random();
+            var randomBeers = new List<Beer>();
+            for (int i = 0; i < numberOfBeers; i++)
+            {
+                var randomBeerId = random.Next(0, beers.Count);
+                randomBeers.Add(br.RetrieveById(randomBeerId));
+            }
+            return randomBeers;
         }
     }
 }
