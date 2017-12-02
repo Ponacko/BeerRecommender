@@ -14,5 +14,9 @@ namespace BL.Services
             var repository = new BeerRepository();
             return repository.RetrieveAll();
         }
+
+        public static List<Beer> GetPopularBeers() {
+            return GetAllBeers().FindAll(b => b.IsPopular).ToList();
+        }
     }
 }
