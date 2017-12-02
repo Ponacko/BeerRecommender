@@ -38,5 +38,45 @@ namespace BeerRecommender
         {
             return $"Beer [{Name}] with EPM [{Epm}]  of type [{Category}], image available at [{ImageUrl}]";
         }
+
+        public static bool operator ==(Beer obj1, Beer obj2)
+        {
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj1, null))
+            {
+                return false;
+            }
+            if (ReferenceEquals(obj2, null))
+            {
+                return false;
+            }
+            return obj1.Id == obj2.Id;
+        }
+
+        public static bool operator !=(Beer obj1, Beer obj2)
+        {
+            return !(obj1.Id == obj2.Id);
+        }
+
+        public override bool Equals(object tag)
+        {
+            var item = tag as Beer;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            return Id.Equals(item.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

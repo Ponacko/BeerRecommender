@@ -26,6 +26,14 @@ namespace BL
                 Console.WriteLine(a.Value);
             }
             Console.ReadLine();*/
+            var popularBeers = BeerService.GetPopularBeers().Take(3).ToList();
+            var tags = TagService.GetTagsWithOccurences(popularBeers);
+            var beersContainingTags = BeerService.GetBeersContainingTags(tags.Keys.ToList());
+            var finalyDone = RecommendationService.AssignValuesToBeersForRecommendation(
+                tags, 
+                beersContainingTags.ToList(), 
+                10);
+            finalyDone.ForEach(x => Console.WriteLine(x.Name));
         }
 
         private static Brewery CreateBrewery()

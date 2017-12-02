@@ -23,5 +23,18 @@ namespace BeerRecommender.Repositories
                 .Where(b => b.Tags.Contains(tag));
             return retrievedTags.ToList();
         }
+
+        public List<Tag> RetrieveTagsFromBeers(List<Beer> beers)
+        {
+            var beersList = context.Beers.Include(x => x.Tags)
+                .ToList();
+            var y = beersList.Where(b => beers.Contains(b))
+                .ToList();
+
+            var tagsList = beersList.SelectMany(x => x.Tags);
+            var tagsSet = new HashSet<Tag>(tagsList);  
+              
+            return tagsSet.ToList();
+        }
     }
 }
