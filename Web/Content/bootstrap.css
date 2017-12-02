@@ -1028,6 +1028,19 @@ pre code {
   .col-sm-pull-6 {
     right: 50%;
   }
+  ul {
+    list-style-type: none;
+}
+
+ul li {
+    float: left;
+    padding: 5px;
+}
+
+ul li:nth-child(3n + 4) {
+    clear: left;
+    float: left;
+}
   .col-sm-pull-7 {
     right: 58.333333333333336%;
   }

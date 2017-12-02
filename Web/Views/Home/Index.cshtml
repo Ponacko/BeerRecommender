@@ -1,9 +1,28 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Beers";
 }
 <h2>@ViewBag.Title</h2>
-@foreach (var beer in ViewBag.Beers){
+<table>
+    @for (var i = 0; i <ViewBag.Count/5; i++)
+    {
+        <tr>
+            @for (var j = 0; j<5 && j+ i*5 < ViewBag.Count; j++)
+            {
+                <td>
+                    @{
+                        var beer = ViewBag.Beers[i*5 + j];
+                        @beer.Name
 
-    {<li>@beer.Name</li>}
-}
-<h3>@ViewBag.Beers</h3>
+                        <br/>
+                        <img src="@beer.ImageUrl" alt="@beer.Name"/>
+                    }
+                </td>
+            }
+            
+        </tr>
+        
+    }
+</table>
+
+
