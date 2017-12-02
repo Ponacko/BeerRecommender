@@ -222,7 +222,7 @@ namespace BeerRecommender
             foreach (var stringTag in stringTagList)
             {
                 string tagName = stringTag.Trim();
-                if (stringTag.Length < 4) continue;
+                if (stringTag.Length < 4 || stringTag == "pivo") continue;
                 if (stringTag.Last() == 'ý')
                     tagName = stringTag.Remove(stringTag.Length - 1, 1) + "é";
 
