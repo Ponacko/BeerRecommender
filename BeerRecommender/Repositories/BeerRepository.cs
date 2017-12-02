@@ -16,7 +16,7 @@ namespace BeerRecommender.Repositories
             entities = context.Beers;
         }
 
-        public List<Beer> RetrieveBeerByTag(Tag tag)
+        public List<Beer> RetrieveBeersByTag(Tag tag)
         {
             var retrievedTags = context.Beers.Include(x => x.Tags)
                 .ToList()
