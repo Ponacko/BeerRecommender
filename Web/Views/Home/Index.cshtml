@@ -1,9 +1,9 @@
-﻿
+﻿@model Web.Models.UserModel
 @{
     ViewBag.Title = "Beers";
 }
 <h2>@ViewBag.Title</h2>
-<table class="table">
+<table class="table  table-inverse">
     @for (var i = 0; i <ViewBag.Count/5; i++)
     {
         <tr>
@@ -13,10 +13,8 @@
                     <a href="#">
                         @{
                             var beer = ViewBag.Beers[i * 5 + j];
+                            <img src="@beer.ImageUrl" alt="@beer.Name" /><br/>
                             @beer.Name
-
-                            <br />
-                            <img src="@beer.ImageUrl" alt="@beer.Name" />
                         }
                     </a>
                 </td>
@@ -26,5 +24,10 @@
         
     }
 </table>
+
+<center>
+    <h4>Kraj</h4><br/>
+    @Html.DropDownListFor(model => model.Region, new SelectList(ViewBag.Regions), "-- Vyberte kraj --")
+</center>
 
 

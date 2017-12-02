@@ -12,6 +12,8 @@ namespace Web.Controllers {
             var beers = BeerService.GetPopularBeers().ToList();
             ViewBag.Count = beers.Count();
             ViewBag.Beers = beers;
+            var regions = RegionService.GetAllRegions();
+            ViewBag.Regions = regions.Select(region => region.Name).ToList(); ;
             return View();
         }
 
