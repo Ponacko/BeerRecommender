@@ -27,6 +27,12 @@ namespace BeerRecommender
          "Praha", "Středo", "Jihočes", "Plzeň",
          "Karlo", "Ústec", "Liber", "Králov", "Pardub",
          "Kraj Vys", "Jihomor", "Olom", "Morav", "Zlín" });
+        public static readonly IList<String> PopularBeerNames = new ReadOnlyCollection<string>
+        (new List<String> {
+         "Pilsner Urquell", "Pardubický Porter", "Primátor India Pale Ale", "Primátor APAč", "Černá Hora Kvasar",
+         "Poutník 12% hořký", "Bernard Polotmavá 12", "Velkopopovický Kozel Tmavý nefiltrovaný", "Černá Raketa", "Švihák kávový",
+         "Opat ochucené speciální pivo čokoláda", "Primátor Weizenbier", "Otakar 11° nefiltrované", "Primátor Double 24%", "Svijanská Desítka 10%",
+         "Bakalář řezané výčepní", "Černá Hora Borůvka", "Bernard Bezlepkový ležák", "Hubertus nealko", "Zlínský Švec 13° jantarový speciál"});
 
         #endregion
 
@@ -205,7 +211,35 @@ namespace BeerRecommender
                 };
                 tagsList.Add(tag);
             }
-            
+            if (name.Contains("IPA") || name.Contains("India Pale Ale"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "IPA" });
+            }
+            if (name.Contains("APA"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "APA" });
+            }
+            if (name.Contains("hořk"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "hořké" });
+            }
+            if (name.Contains("10") || name.Contains("Desít"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "10tka" });
+            }
+            if (name.Contains("12") || name.Contains("Dvan"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "12tka" });
+            }
+            if (description.Contains("nejsiln"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "silné" });
+            }
+            if (name.Contains("jantar"))
+            {
+                tagsList.Add(new Tag { Id = 1, Name = "jantar" });
+            }
+
             double epm = 0.0;
             double alcoholContent = 0.0;
             if (epmAndAlcohol != null)
@@ -227,7 +261,8 @@ namespace BeerRecommender
                 Category = tags,
                 Brewery = brewery,
                 ImageUrl = imageRelativeUrl == null ? null : "http://ceskepivo-ceskezlato.cz/" + imageRelativeUrl,
-                Tags = tagsList
+                Tags = tagsList,
+                IsPopular = PopularBeerNames.Contains(name) ? true : false
             };
 
             return beer;
@@ -235,6 +270,7 @@ namespace BeerRecommender
 
         #endregion
 
+        #region UpdateDB
         private static void UpdateBreweryDb(List<Brewery> breweries, AppDbContext context)
         {
             foreach (var b in breweries)
@@ -306,5 +342,6 @@ namespace BeerRecommender
                 context.Regions.Add(region);
             }
         }
+        #endregion
     }
 }
