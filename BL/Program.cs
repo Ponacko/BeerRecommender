@@ -1,4 +1,5 @@
 ﻿using BeerRecommender;
+using BeerRecommender.Repositories;
 using BL.Services;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,20 @@ namespace BL
         static void Main(string[] args)
         {
             //UserService.CreateUser("Pubey", 18, "addd@gmail.com");
+            BeerRepository br = new BeerRepository();
+            TagRepository tr = new TagRepository();
+            /*List<Beer> beers = br.RetrieveBeerByTag(
+                tr.RetrieveTagByName("světlé"));
+            beers?.ForEach(x => Console.WriteLine(x.Name));
+            var x = TagService.GetTagsFromBeers(beers);
+            foreach(var a in x)
+            {
+                Console.WriteLine(a.Key.Name);
+                Console.WriteLine(a.Value);
+            }
+            Console.ReadLine();*/
+            //var x = BeerService.RecommendRandomBeers(10).Select(b => b.Name).ToList();
+            //x.ForEach(Console.WriteLine);
         }
 
         private static Brewery CreateBrewery()

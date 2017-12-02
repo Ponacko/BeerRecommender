@@ -38,11 +38,12 @@ namespace BL.Services
             userRepo.Update(user);
         }
 
-        public static void AssignBeerToUsersPickedBeers(User user, Beer beer)
+        public static void AddUserPickedBeers(User user, List<Beer> pickedBeers)
         {
-            UserRepository userRepo = new UserRepository();
-            user.PickedBeers.Add(beer);
-            userRepo.Update(user);
+            UserRepository ur = new UserRepository();
+            ur.RetrieveById(user.Id);
+            user.PickedBeers.AddRange(pickedBeers);
+            ur.Update(user);    
         }
     }
 }
