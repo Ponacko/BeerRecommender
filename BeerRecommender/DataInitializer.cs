@@ -36,6 +36,8 @@ namespace BeerRecommender
 
         #endregion
 
+        public static HashSet<Tag> TagSet { get; set; }
+
         public DataInitializer(AppDbContext context) {
             Seed(context);
         }
@@ -44,15 +46,35 @@ namespace BeerRecommender
         {
             if (!context.Breweries.Any() || !context.Beers.Any())
             {
+                TagSet = PrepareBasicTags();
                 var parsedObjects = ParseBreweriesAndBeers(SOURCE_FILENAME);
-               
                 UpdateBreweryDb(parsedObjects.Item1, context);
                 UpdateRegionDb(parsedObjects.Item3, context);
                 // Send beers because they contain tags from parsing
-                UpdateTagsDb(parsedObjects.Item2, context);
+                UpdateTagsDb(TagSet, context);
                 UpdateBeersDb(parsedObjects.Item2, context);
             }
+            else
+            {
+                TagSet = new HashSet<Tag>(context.Tags.ToList());
+            }
             base.Seed(context);
+        }
+
+        private static HashSet<Tag> PrepareBasicTags()
+        {
+            var tagSet = new HashSet<Tag>
+            {
+                new Tag { Name = "IPA" },
+                new Tag { Name = "APA" },
+                new Tag { Name = "hořké" },
+                new Tag { Name = "10tka" },
+                new Tag { Name = "12tka" },
+                new Tag { Name = "silné" },
+                new Tag { Name = "jantar" }
+            };
+
+            return tagSet;
         }
 
         private static List<Region> PrepareRegionEntities()
@@ -142,7 +164,6 @@ namespace BeerRecommender
             var breweryRegion = result.Any() ? result.First() : null; 
             var brewery = new Brewery()
             {
-                Id = 1,
                 Name = name,
                 Type = type,
                 YearOfFoundation = yearOfFoundation,
@@ -204,40 +225,48 @@ namespace BeerRecommender
                 if (stringTag.Last() == 'ý')
                     tagName = stringTag.Remove(stringTag.Length - 1, 1) + "é";
 
-                var tag = new Tag
+                var tagCondition = TagSet.Where(t => t.Name == tagName);
+                if (tagCondition.Any())
                 {
-                    Id = 1,
-                    Name = tagName
-                };
-                tagsList.Add(tag);
+                    tagsList.Add(tagCondition.First());
+                }
+                else
+                {
+                    var tag = new Tag
+                    {
+                        Name = tagName
+                    };
+                    TagSet.Add(tag);
+                    tagsList.Add(tag);
+                }
             }
             if (name.Contains("IPA") || name.Contains("India Pale Ale"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "IPA" });
+                tagsList.Add(TagSet.Where(t => t.Name == "IPA").First());
             }
             if (name.Contains("APA"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "APA" });
+                tagsList.Add(TagSet.Where(t => t.Name == "APA").First());
             }
             if (name.Contains("hořk"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "hořké" });
+                tagsList.Add(TagSet.Where(t => t.Name == "hořké").First());
             }
             if (name.Contains("10") || name.Contains("Desít"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "10tka" });
+                tagsList.Add(TagSet.Where(t => t.Name == "10tka").First());
             }
             if (name.Contains("12") || name.Contains("Dvan"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "12tka" });
+                tagsList.Add(TagSet.Where(t => t.Name == "12tka").First());
             }
             if (description.Contains("nejsiln"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "silné" });
+                tagsList.Add(TagSet.Where(t => t.Name == "silné").First());
             }
             if (name.Contains("jantar"))
             {
-                tagsList.Add(new Tag { Id = 1, Name = "jantar" });
+                tagsList.Add(TagSet.Where(t => t.Name == "jantar").First());
             }
 
             double epm = 0.0;
@@ -253,7 +282,6 @@ namespace BeerRecommender
 
             var beer = new Beer()
             {
-                Id = 1,
                 Name = name,
                 Description = description,
                 Epm = epm,
@@ -289,13 +317,9 @@ namespace BeerRecommender
             context.SaveChanges();
         }
 
-        private static void UpdateTagsDb(List<Beer> beers, AppDbContext context)
+        private static void UpdateTagsDb(HashSet<Tag> beers, AppDbContext context)
         {
-            // flatten tags from beerList to one list then make set to remove duplicates
-            var tagList = beers.SelectMany(i => i.Tags).ToList();
-            var tagSet = new HashSet<Tag>(tagList);
-
-            foreach (var t in tagSet)
+            foreach (var t in TagSet)
             {
                 AddTagToDb(context, t);
             }
