@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using BeerRecommender.Entities;
 using System.Collections.ObjectModel;
+using System.Web.Hosting;
 
 namespace BeerRecommender
 {
@@ -99,8 +100,8 @@ namespace BeerRecommender
             var breweryList = new List<Brewery>();
             var beerList = new List<Beer>();
 
-            string dirpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string path = Path.Combine(dirpath, @"SourceFiles\" + sourceFileName);
+            string dirpath = Directory.GetParent(HostingEnvironment.ApplicationPhysicalPath).Parent.FullName;
+            string path = Path.Combine(dirpath, @"BeerRecommender\SourceFiles\" + sourceFileName);
 
             var regionList = PrepareRegionEntities();
 
