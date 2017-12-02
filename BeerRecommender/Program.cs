@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BeerRecommender.Entities;
+using BeerRecommender.Repositories;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BeerRecommender
@@ -6,6 +9,12 @@ namespace BeerRecommender
     class Program
     {
         static void Main(string[] args) {
+            /*BeerRepository br = new BeerRepository();
+            TagRepository tr = new TagRepository();
+            List<Beer> beers = br.RetrieveBeerByTag(
+                tr.RetrieveTagByName("světlé"));
+            beers.ForEach(Console.WriteLine);
+            Console.ReadLine();*/
             using (var context = new AppDbContext())
             {
                 PrintBreweriesFromDb(context);
