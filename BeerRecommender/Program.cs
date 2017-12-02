@@ -8,10 +8,20 @@ namespace BeerRecommender
         static void Main(string[] args) {
             using (var context = new AppDbContext())
             {
-                PrintBreweriesFromDb(context);
-                PrintBeersFromDb(context);
+                //PrintBreweriesFromDb(context);
+                //PrintBeersFromDb(context);
+                PrintNamesOfPopularBeers(context);
             }
             Console.ReadLine();
+        }
+
+        private static void PrintNamesOfPopularBeers(AppDbContext context)
+        {
+            Console.WriteLine("Printing the selected 20 popular beers:");
+            foreach (var beer in context.Beers.Where(b => b.IsPopular).ToList())
+            {
+                Console.WriteLine(beer.Name);
+            }
         }
 
         private static void PrintBreweriesFromDb(AppDbContext context)
