@@ -12,13 +12,18 @@ namespace BL.Services
 {
     public static class UserService
     {
-        public static bool CreateUser(string userName, int age, string email) {
+        public static int CreateUser(List<Beer> pickedBeers) {
             User user = new User();
 
             UserRepository userRepo = new UserRepository();
             try
             {
-                userRepo.Create(user);
+                foreach (var pickedBeer in pickedBeers) {
+                    userRepo.AddPickedBeer(user, pickedBeer);
+                }
+
+                var id = userRepo.Create(user);
+                return id;
             }
             catch(DbEntityValidationException ex)
             {
@@ -28,7 +33,6 @@ namespace BL.Services
                 var message = string.Join("; ", errors);
                 throw new DbEntityValidationException(message, ex.EntityValidationErrors);
             }
-            return true;
         }
 
         public static void AssignRegionToUser(Region region, User user)
@@ -41,9 +45,13 @@ namespace BL.Services
         public static void AddUserPickedBeers(User user, List<Beer> pickedBeers)
         {
             UserRepository ur = new UserRepository();
-            ur.RetrieveById(user.Id);
             user.PickedBeers.AddRange(pickedBeers);
             ur.Update(user);    
+        }
+
+        public static User GetUser(int id) {
+            UserRepository ur = new UserRepository();
+            return ur.RetrieveById(id);
         }
     }
 }

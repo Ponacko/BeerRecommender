@@ -8,5 +8,10 @@ namespace BeerRecommender.Repositories
             context = new AppDbContext();
             entities = context.Users;
         }
+
+        public void AddPickedBeer(User user, Beer beer) {
+            context.Beers.Attach(beer);
+            user.PickedBeers.Add(beer);
+        }
     }
 }

@@ -33,5 +33,16 @@ namespace BL.Services
             }
             return foundBeers;
         }
+
+        public static List<Beer> GetBeersByIds(List<string> ids) {
+            BeerRepository br = new BeerRepository();
+            List<Beer> list = new List<Beer>();
+            foreach (var id in ids) {
+                var beerId = int.Parse(id);
+                list.Add(br.RetrieveById(beerId));
+            }
+
+            return list;
+        }
     }
 }
