@@ -22,7 +22,9 @@ namespace BeerRecommender
 
         [Required]
         public string Name { get; set; }
+        [InverseProperty("PickedBeers")]
         public List<User> PickedByUsers { get; set; }
+        [InverseProperty("RecommendedBeers")]
         public List<User> RecommendedForUsers { get; set; }
         public List<Tag> Tags { get; set; }
         public bool IsPopular { get; set; }

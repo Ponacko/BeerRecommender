@@ -108,6 +108,10 @@
     <Compile Include="Migrations\201711291928582_region_abbreviations.Designer.cs">
       <DependentUpon>201711291928582_region_abbreviations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712022124323_inverse_property.cs" />
+    <Compile Include="Migrations\201712022124323_inverse_property.Designer.cs">
+      <DependentUpon>201712022124323_inverse_property.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repositories\BeerRepository.cs" />
     <Compile Include="Repositories\BreweryRepository.cs" />
@@ -167,6 +171,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711291928582_region_abbreviations.resx">
       <DependentUpon>201711291928582_region_abbreviations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712022124323_inverse_property.resx">
+      <DependentUpon>201712022124323_inverse_property.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
