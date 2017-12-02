@@ -3,20 +3,22 @@
     ViewBag.Title = "Beers";
 }
 <h2>@ViewBag.Title</h2>
-<table>
+<table class="table">
     @for (var i = 0; i <ViewBag.Count/5; i++)
     {
         <tr>
             @for (var j = 0; j<5 && j+ i*5 < ViewBag.Count; j++)
             {
-                <td>
-                    @{
-                        var beer = ViewBag.Beers[i*5 + j];
-                        @beer.Name
+                <td style="padding: 10px;">
+                    <a href="#">
+                        @{
+                            var beer = ViewBag.Beers[i * 5 + j];
+                            @beer.Name
 
-                        <br/>
-                        <img src="@beer.ImageUrl" alt="@beer.Name"/>
-                    }
+                            <br />
+                            <img src="@beer.ImageUrl" alt="@beer.Name" />
+                        }
+                    </a>
                 </td>
             }
             

@@ -9,10 +9,9 @@ using BL.Services;
 namespace Web.Controllers {
     public class HomeController : Controller {
         public ActionResult Index() {
-            var beers = BeerService.GetAllBeers().Take(30);
-            var enumerable = beers as Beer[] ?? beers.ToArray();
-            ViewBag.Beers = enumerable.ToList();
-            ViewBag.Count = enumerable.Count();
+            var beers = BeerService.GetPopularBeers().ToList();
+            ViewBag.Count = beers.Count();
+            ViewBag.Beers = beers;
             return View();
         }
 
