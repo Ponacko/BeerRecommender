@@ -69,6 +69,7 @@
     <Compile Include="Services\BeerService.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\TagService.cs" />
+    <Compile Include="Services\RegionService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Tests\ServiceTests.cs" />
   </ItemGroup>

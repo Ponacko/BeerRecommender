@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using BeerRecommender.Entities;
 using System.Collections.ObjectModel;
+using System.Web.Hosting;
 
 namespace BeerRecommender
 {
@@ -30,9 +31,9 @@ namespace BeerRecommender
         public static readonly IList<String> PopularBeerNames = new ReadOnlyCollection<string>
         (new List<String> {
          "Pilsner Urquell", "Pardubický Porter", "Primátor India Pale Ale", "Primátor APAč", "Černá Hora Kvasar",
-         "Poutník 12% hořký", "Bernard Polotmavá 12", "Velkopopovický Kozel Tmavý nefiltrovaný", "Černá Raketa", "Švihák kávový",
+         "Poutník 12% hořký", "Bernard Polotmavá 12", "Velkopopovický Kozel Černý", "Černá Raketa", "Švihák kávový",
          "Opat ochucené speciální pivo čokoláda", "Primátor Weizenbier", "Otakar 11° nefiltrované", "Primátor Double 24%", "Svijanská Desítka 10%",
-         "Bakalář řezané výčepní", "Černá Hora Borůvka", "Bernard Bezlepkový ležák", "Hubertus nealko", "Zlínský Švec 13° jantarový speciál"});
+         "Bakalář řezané výčepní", "Černá Hora Borůvka", "Bernard Bezlepkový ležák", "Birell Světlý", "Zlínský Švec 13° jantarový speciál"});
 
         #endregion
 
@@ -99,8 +100,8 @@ namespace BeerRecommender
             var breweryList = new List<Brewery>();
             var beerList = new List<Beer>();
 
-            string dirpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string path = Path.Combine(dirpath, @"SourceFiles\" + sourceFileName);
+            string dirpath = Directory.GetParent(HostingEnvironment.ApplicationPhysicalPath).Parent.FullName;
+            string path = Path.Combine(dirpath, @"BeerRecommender\SourceFiles\" + sourceFileName);
 
             var regionList = PrepareRegionEntities();
 
@@ -221,7 +222,7 @@ namespace BeerRecommender
             foreach (var stringTag in stringTagList)
             {
                 string tagName = stringTag.Trim();
-                if (stringTag.Length < 4) continue;
+                if (stringTag.Length < 4 || stringTag == "pivo") continue;
                 if (stringTag.Last() == 'ý')
                     tagName = stringTag.Remove(stringTag.Length - 1, 1) + "é";
 
