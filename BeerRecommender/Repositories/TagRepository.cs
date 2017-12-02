@@ -13,5 +13,14 @@ namespace BeerRecommender.Repositories
             context = new AppDbContext();
             entities = context.Tags;
         }
+
+        public Tag RetrieveTagByName(string name)
+        {
+            var retrievedTags = context.Tags.Where(b => b.Name == name);
+            //var t = retrievedTags.Any();
+            var kurva = retrievedTags.Count();
+            var pica = retrievedTags.First();
+            return retrievedTags.Any() ? retrievedTags.First() : null;
+        }
     }
 }

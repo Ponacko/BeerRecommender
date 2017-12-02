@@ -1,4 +1,5 @@
 ﻿using BeerRecommender;
+using BeerRecommender.Entities;
 using BeerRecommender.Repositories;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,20 @@ namespace BL.Services
                 throw new DbEntityValidationException(message, ex.EntityValidationErrors);
             }
             return true;
+        }
+
+        public static void AssignRegionToUser(Region region, User user)
+        {
+            UserRepository userRepo = new UserRepository();
+            user.Region = region;
+            userRepo.Update(user);
+        }
+
+        public static void AssignBeerToUsersPickedBeers(User user, Beer beer)
+        {
+            UserRepository userRepo = new UserRepository();
+            user.PickedBeers.Add(beer);
+            userRepo.Update(user);
         }
     }
 }
