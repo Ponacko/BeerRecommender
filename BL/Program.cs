@@ -26,8 +26,6 @@ namespace BL
                 Console.WriteLine(a.Value);
             }
             Console.ReadLine();*/
-            //var x = BeerService.RecommendRandomBeers(10).Select(b => b.Name).ToList();
-            //x.ForEach(Console.WriteLine);
         }
 
         private static Brewery CreateBrewery()

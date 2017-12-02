@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BeerRecommender;
 using BeerRecommender.Repositories;
+using BeerRecommender.Entities;
 
 namespace BL.Services
 {
@@ -33,6 +34,18 @@ namespace BL.Services
                 randomBeers.Add(br.RetrieveById(randomBeerId));
             }
             return randomBeers;
+        }
+
+        public static HashSet<Beer> GetBeersContainingTags(List<Tag> tags)
+        {
+            BeerRepository br = new BeerRepository();
+            var beers = br.RetrieveAll();
+            HashSet<Beer> foundBeers = new HashSet<Beer>();
+            foreach(var tag in tags)
+            {
+                foundBeers.UnionWith(br.RetrieveBeersByTag(tag));
+            }
+            return foundBeers;
         }
     }
 }
