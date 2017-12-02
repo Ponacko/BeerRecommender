@@ -11,14 +11,12 @@ namespace BL.Services
 {
     public static class TagService
     {
-        public static Dictionary<Tag, int> GetTagsFromBeers(List<Beer> beers)
+        public static Dictionary<Tag, int> GetTagsWithOccurences(List<Beer> beers)
         {
             BeerRepository br = new BeerRepository();
             List<Tag> listOfTags = new List<Tag>();
 
-            foreach(Beer beer in beers){
-                listOfTags.AddRange(beer.Tags);
-            }
+            listOfTags.AddRange(br.RetrieveTagsFromBeers(beers));
 
             var groups = listOfTags.GroupBy(s => s)
                 .Select(s => new { Tag = s.Key, Count = s.Count() });
