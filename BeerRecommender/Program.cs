@@ -19,6 +19,7 @@ namespace BeerRecommender
             {
                 //PrintBreweriesFromDb(context);
                 //PrintBeersFromDb(context);
+
                 PrintNamesOfPopularBeers(context);
             }
             Console.ReadLine();

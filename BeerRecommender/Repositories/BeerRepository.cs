@@ -18,10 +18,9 @@ namespace BeerRecommender.Repositories
 
         public List<Beer> RetrieveBeerByTag(Tag tag)
         {
-            var retrievedTags = context.Beers.ToList().Where(b => b.Tags.Contains(tag));
-            var piva = context.Beers.ToList().Take(20);
-            var kokot = retrievedTags.Count();
-            var pica = retrievedTags.Take(20);
+            var retrievedTags = context.Beers.Include(x => x.Tags)
+                .ToList()
+                .Where(b => b.Tags.Contains(tag));
             return retrievedTags.ToList();
         }
     }
