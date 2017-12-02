@@ -19,6 +19,12 @@ namespace BeerRecommender
             {
                 //PrintBreweriesFromDb(context);
                 //PrintBeersFromDb(context);
+                var repo = new BeerRepository();
+                var tagRepo = new TagRepository();
+                var tag = tagRepo.RetrieveTagByName("nefiltrované");
+                var a = repo.RetrieveBeerByTag(tag);
+                var b = repo.RetrieveAll().Where(r => r.Name.Contains("Polička")).ToList();
+
                 PrintNamesOfPopularBeers(context);
             }
             Console.ReadLine();
