@@ -12,7 +12,7 @@ namespace BL.Services
 {
     public static class UserService
     {
-        public static int CreateUser(List<Beer> pickedBeers, int? regionId) {
+        public static int CreateUser(List<Beer> pickedBeers, List<Beer> recommendedBeers, int? regionId) {
 
             UserRepository userRepo = new UserRepository();
             User user = new User();
@@ -28,6 +28,10 @@ namespace BL.Services
             {
                 foreach (var pickedBeer in pickedBeers) {
                     userRepo.AddPickedBeer(user, pickedBeer);
+                }
+                foreach (var recommendedBeer in recommendedBeers)
+                {
+                    userRepo.AddRecommendedBeer(user, recommendedBeer);
                 }
 
                 var id = userRepo.Create(user);
@@ -67,6 +71,12 @@ namespace BL.Services
         {
             UserRepository ur = new UserRepository();
             return ur.GetUserPickedBeers(userId);
+        }
+
+        public static List<Beer> GetUsersRecommendedBeers(int userId)
+        {
+            UserRepository ur = new UserRepository();
+            return ur.GetUserRecommendedBeers(userId);
         }
 
         public static Region GetUserRegion(int userId) {

@@ -47,6 +47,15 @@ namespace BL.Services
             return beersWithCoefficient.Keys
                 .Take(numberOfBeersToRecommend)
                 .ToList();
-        }      
+        }
+
+        public static List<Beer> GetRecommendedBeers(List<Beer> beers, int numberOfRecommendations ) {
+            var tags = TagService.GetTagsWithOccurences(beers);
+            var beersContainingTags = BeerService.GetBeersContainingTags(tags.Keys.ToList());
+            return  AssignValuesToBeersForRecommendation(
+                tags,
+                beersContainingTags.ToList(),
+                numberOfRecommendations);
+        }
     }
 }

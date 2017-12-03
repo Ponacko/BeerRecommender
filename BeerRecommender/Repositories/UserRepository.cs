@@ -20,6 +20,17 @@ namespace BeerRecommender.Repositories
             return entities.Where(u => u.Id == userId).SelectMany(u => u.PickedBeers).Distinct().ToList();
         }
 
+        public void AddRecommendedBeer(User user, Beer beer)
+        {
+            //context.Beers.Attach(beer);
+            user.RecommendedBeers.Add(beer);
+        }
+
+        public List<Beer> GetUserRecommendedBeers(int userId)
+        {
+            return entities.Where(u => u.Id == userId).SelectMany(u => u.RecommendedBeers).Distinct().ToList();
+        }
+
         public void SetUserRegion(User user, Region region)
         {
             context.Regions.Attach(region);
