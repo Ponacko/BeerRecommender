@@ -9,19 +9,16 @@ namespace BeerRecommender
     class Program
     {
         static void Main(string[] args) {
-            /*using (var context = new AppDbContext())
+            using (var context = new AppDbContext())
             {
                 //PrintBreweriesFromDb(context);
                 //PrintBeersFromDb(context);
                 var repo = new BeerRepository();
                 var tagRepo = new TagRepository();
-                var tag = tagRepo.RetrieveTagByName("nefiltrované");
-                var a = repo.RetrieveBeerByTag(tag);
-                var b = repo.RetrieveAll().Where(r => r.Name.Contains("Poli")).ToList();
 
                 PrintNamesOfPopularBeers(context);
             }
-            Console.ReadLine();*/
+            Console.ReadLine();
         }
 
         private static void PrintNamesOfPopularBeers(AppDbContext context)

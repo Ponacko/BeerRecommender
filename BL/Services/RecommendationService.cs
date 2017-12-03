@@ -24,29 +24,45 @@ namespace BL.Services
             return randomBeers;
         }
 
-        public static List<Beer> AssignValuesToBeersForRecommendation(
-            Dictionary<Tag, int> tagsWithValues, 
-            List<Beer> beers,
-            int numberOfBeersToRecommend)
+        public static List<Beer> ReccomendBeers(List<Beer> pickedPopularBeers, int numberOfBeersToRecommend, Region selectedRegion = null)
         {
-            var beersWithCoefficient = new Dictionary<Beer, int>();
-            foreach(var b in beers)
+            BeerRepository br = new BeerRepository();
+            var tagsFromPickedPopularBeers = br.RetrieveTagsFromBeers(pickedPopularBeers);
+
+            var groups = tagsFromPickedPopularBeers.GroupBy(s => s)
+                .Select(s => new { Tag = s.Key, Count = s.Count() });
+            var tagWeightDictionary = groups.ToDictionary(g => g.Tag, g => g.Count);
+            var tagsFromDictionary = tagWeightDictionary.Keys.ToList();
+
+
+            // Beers containing tags
+            var allBeers = br.RetrieveAllBeersWithBreweries();
+            if (selectedRegion != null)
+            {
+                allBeers = allBeers.Where(b => b.Brewery.Region == selectedRegion).ToList();
+            }
+            var beersContainingSelectedTags = allBeers
+                .Where(b => b.Tags.Intersect(tagsFromDictionary).Any())
+                .ToList();
+
+            var beersWithCoefficient = new List<Tuple<Beer, int>>();
+            foreach (var b in beersContainingSelectedTags)
             {
                 int score = 0;
                 var a = b.Tags
-                    .Where(r => tagsWithValues.Keys.Contains(r))
+                    .Where(r => tagWeightDictionary.Keys.Contains(r))
                     .ToList();
-                foreach(var tag in a)
+                foreach (var tag in a)
                 {
                     int value = 0;
-                    tagsWithValues.TryGetValue(tag, out value);
+                    tagWeightDictionary.TryGetValue(tag, out value);
                     score += value;
                 }
-                beersWithCoefficient.Add(b, score);
+                beersWithCoefficient.Add(new Tuple<Beer, int>(b, score));
             }
-            return beersWithCoefficient.Keys
-                .Take(numberOfBeersToRecommend)
-                .ToList();
-        }      
+            var sortedBeersByCoefficient = beersWithCoefficient.OrderByDescending(b => b.Item2).ToList();
+
+            return sortedBeersByCoefficient.Take(numberOfBeersToRecommend).Select(r => r.Item1).ToList();
+        }
     }
 }

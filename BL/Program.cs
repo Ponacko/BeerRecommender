@@ -13,27 +13,20 @@ namespace BL
     {
         static void Main(string[] args)
         {
-            //UserService.CreateUser("Pubey", 18, "addd@gmail.com");
             BeerRepository br = new BeerRepository();
             TagRepository tr = new TagRepository();
-            /*List<Beer> beers = br.RetrieveBeerByTag(
-                tr.RetrieveTagByName("světlé"));
-            beers?.ForEach(x => Console.WriteLine(x.Name));
-            var x = TagService.GetTagsFromBeers(beers);
-            foreach(var a in x)
-            {
-                Console.WriteLine(a.Key.Name);
-                Console.WriteLine(a.Value);
-            }
-            Console.ReadLine();*/
+            RegionRepository rr = new RegionRepository();
+            var region = rr.RetrieveAll().Take(1).First();
             var popularBeers = BeerService.GetPopularBeers().Take(3).ToList();
-            var tags = TagService.GetTagsWithOccurences(popularBeers);
-            var beersContainingTags = BeerService.GetBeersContainingTags(tags.Keys.ToList());
-            var finalyDone = RecommendationService.AssignValuesToBeersForRecommendation(
-                tags, 
-                beersContainingTags.ToList(), 
-                10);
+
+            Console.WriteLine("Your picked beers were:");
+            popularBeers.ForEach(b => Console.WriteLine(b.Name));
+
+            Console.WriteLine();
+            Console.WriteLine("Our recommendation is:");
+            var finalyDone = RecommendationService.ReccomendBeers(popularBeers, 10, region);
             finalyDone.ForEach(x => Console.WriteLine(x.Name));
+            Console.ReadKey();
         }
 
         private static Brewery CreateBrewery()
