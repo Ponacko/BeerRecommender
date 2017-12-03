@@ -3,7 +3,7 @@ using BeerRecommender.Entities;
 
 namespace Web.Models {
     public class UserModel {
-        public string Region { get; set; }
+        public int? RegionId { get; set; }
         public List<string> SelectedBeers { get; set; }
 
         public UserModel() {
