@@ -27,7 +27,8 @@ namespace Web.Controllers {
         public ActionResult Index(UserModel userModel) {
             if (ModelState.IsValid) {
                 var beers = BeerService.GetBeersByIds(userModel.SelectedBeers);
-                var id = UserService.CreateUser(beers, userModel.RegionId);
+                var recommended = RecommendationService.GetRecommendedBeers(beers, 5);
+                var id = UserService.CreateUser(beers, recommended, userModel.RegionId);
                 return RedirectToAction("Recommend", new {userId = id});
             }
             return View();
@@ -38,7 +39,11 @@ namespace Web.Controllers {
             
             ViewBag.UserId = userId;
             ViewBag.Region = UserService.GetUserRegion(userId)?.Name;
-            ViewBag.UserBeers = UserService.GetUsersPickedBeers(userId);
+            var picked = UserService.GetUsersPickedBeers(userId);
+            ViewBag.PickedBeers = picked;
+            ViewBag.PickedCount = picked.Count;
+            ViewBag.RecommendedBeers = UserService.GetUsersRecommendedBeers(userId);
+            ViewBag.RandomBeers = RecommendationService.RecommendRandomBeers(5);
 
             return View();
         }
