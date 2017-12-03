@@ -64,5 +64,6 @@ namespace BL.Services
 
             return sortedBeersByCoefficient.Take(numberOfBeersToRecommend).Select(r => r.Item1).ToList();
         }
+        }
     }
 }

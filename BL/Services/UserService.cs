@@ -12,14 +12,26 @@ namespace BL.Services
 {
     public static class UserService
     {
-        public static int CreateUser(List<Beer> pickedBeers) {
-            User user = new User();
+        public static int CreateUser(List<Beer> pickedBeers, List<Beer> recommendedBeers, int? regionId) {
 
             UserRepository userRepo = new UserRepository();
+            User user = new User();
+
+            if (regionId != null)
+            {
+                var rr = new RegionRepository();
+                var region = rr.RetrieveById((int)regionId);
+                userRepo.SetUserRegion(user, region);
+            }
+
             try
             {
                 foreach (var pickedBeer in pickedBeers) {
                     userRepo.AddPickedBeer(user, pickedBeer);
+                }
+                foreach (var recommendedBeer in recommendedBeers)
+                {
+                    userRepo.AddRecommendedBeer(user, recommendedBeer);
                 }
 
                 var id = userRepo.Create(user);
@@ -52,6 +64,24 @@ namespace BL.Services
         public static User GetUser(int id) {
             UserRepository ur = new UserRepository();
             return ur.RetrieveById(id);
+        }
+
+
+        public static List<Beer> GetUsersPickedBeers(int userId)
+        {
+            UserRepository ur = new UserRepository();
+            return ur.GetUserPickedBeers(userId);
+        }
+
+        public static List<Beer> GetUsersRecommendedBeers(int userId)
+        {
+            UserRepository ur = new UserRepository();
+            return ur.GetUserRecommendedBeers(userId);
+        }
+
+        public static Region GetUserRegion(int userId) {
+            UserRepository ur = new UserRepository();
+            return ur.GetUserRegion(userId);
         }
     }
 }

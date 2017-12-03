@@ -3,5 +3,71 @@
 }
 <h2>@ViewBag.Title.</h2>
 
-@foreach (var x in ViewBag.UserBeers)
-{<li>@x.Name</li>}
+Id uzivatela: {@ViewBag.UserId}
+Kraj: {@ViewBag.Region}
+
+Vybrate piva:
+<table class="table  table-inverse">
+    @for (var i = 0; i <= ViewBag.PickedCount/5; i++) {
+        <tr>
+            @for (var j = 0; j < 5 && j + i*5 < ViewBag.PickedCount; j++) {
+                <td style="padding: 10px;">
+
+                    <a href="#">
+                        @{
+                            var beer = ViewBag.PickedBeers[i*5 + j];
+                            <img src="@beer.ImageUrl" alt="@beer.Name"/>
+                            <br/>
+                            @beer.Name
+                        }
+                    </a>
+
+                </td>
+            }
+
+        </tr>
+    }
+</table>
+
+Odporucane piva:
+<table class="table  table-inverse">
+    <tr>
+        @for (var j = 0; j < 5 ; j++) {
+            <td style="padding: 10px;">
+
+                <a href="#">
+                    @{
+                        var beer = ViewBag.RecommendedBeers[j];
+                        <img src="@beer.ImageUrl" alt="@beer.Name"/>
+                        <br/>
+                        @beer.Name
+                    }
+                </a>
+
+            </td>
+        }
+
+    </tr>
+</table>
+
+Odporucane piva 2:
+<table class="table  table-inverse">
+    <tr>
+        @for (var j = 0; j < 5; j++)
+        {
+            <td style="padding: 10px;">
+
+                <a href="#">
+                    @{
+                        var beer = ViewBag.RandomBeers[j];
+                        <img src="@beer.ImageUrl" alt="@beer.Name" />
+                            <br />
+                            @beer.Name
+                    }
+                </a>
+
+            </td>
+                        }
+
+    </tr>
+</table>
