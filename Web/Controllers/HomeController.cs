@@ -27,7 +27,7 @@ namespace Web.Controllers {
         public ActionResult Index(UserModel userModel) {
             if (ModelState.IsValid) {
                 var beers = BeerService.GetBeersByIds(userModel.SelectedBeers);
-                var recommended = RecommendationService.GetRecommendedBeers(beers, 5);
+                var recommended = RecommendationService.ReccomendBeers(beers, 5);
                 var id = UserService.CreateUser(beers, recommended, userModel.RegionId);
                 return RedirectToAction("Recommend", new {userId = id});
             }
