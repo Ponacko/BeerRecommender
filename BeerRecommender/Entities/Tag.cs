@@ -35,7 +35,7 @@ namespace BeerRecommender.Entities
 
         public static bool operator !=(Tag obj1, Tag obj2)
         {
-            return !(obj1.Name == obj2.Name);
+            return !(obj1 == obj2);
         }
 
         public override bool Equals(object tag)

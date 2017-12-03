@@ -28,13 +28,17 @@ namespace BeerRecommender.Repositories
         {
             var beersList = context.Beers.Include(x => x.Tags)
                 .ToList();
-            var y = beersList.Where(b => beers.Contains(b))
+            var beersWithTags = beersList.Where(b => beers.Contains(b))
                 .ToList();
 
-            var tagsList = beersList.SelectMany(x => x.Tags);
-            var tagsSet = new HashSet<Tag>(tagsList);  
+            var tagsList = beersWithTags.SelectMany(x => x.Tags);
               
-            return tagsSet.ToList();
+            return tagsList.ToList();
+        }
+
+        public List<Beer> RetrieveAllBeersWithBreweries()
+        {
+            return context.Beers.Include(b => b.Brewery).Include(b => b.Brewery.Region).ToList();
         }
     }
 }
