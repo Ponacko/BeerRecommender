@@ -10,5 +10,9 @@ namespace BL.Services {
             return repository.RetrieveAll();
         }
 
+        public static Region GetRegion(int id) {
+            var repository = new RegionRepository();
+            return repository.RetrieveById(id);
+        }
     }
 }

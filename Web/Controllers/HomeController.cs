@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using BeerRecommender;
+using BeerRecommender.Entities;
 using BL.Services;
 using Web.Models;
 
@@ -27,8 +28,12 @@ namespace Web.Controllers {
         public ActionResult Index(UserModel userModel) {
             if (ModelState.IsValid) {
                 var beers = BeerService.GetBeersByIds(userModel.SelectedBeers);
-                var recommended = RecommendationService.ReccomendBeers(beers, 5);
-                var id = UserService.CreateUser(beers, recommended, userModel.RegionId);
+                Region region = null;
+                if (userModel.RegionId != null) {
+                    region = RegionService.GetRegion((int)userModel.RegionId);
+                }
+                var recommended = RecommendationService.Recommend(beers, 5, region);
+                var id = UserService.CreateUser(beers, recommended, userModel.RegionId, RecommendationService.Repository.Context);
                 return RedirectToAction("Recommend", new {userId = id});
             }
             return View();
@@ -42,7 +47,9 @@ namespace Web.Controllers {
             var picked = UserService.GetUsersPickedBeers(userId);
             ViewBag.PickedBeers = picked;
             ViewBag.PickedCount = picked.Count;
-            ViewBag.RecommendedBeers = UserService.GetUsersRecommendedBeers(userId);
+            var recommended = UserService.GetUsersRecommendedBeers(userId);
+            ViewBag.RecommendedBeers = recommended;
+            ViewBag.RCount = recommended.Count;
             ViewBag.RandomBeers = RecommendationService.RecommendRandomBeers(5);
 
             return View();

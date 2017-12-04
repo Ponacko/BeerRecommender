@@ -10,24 +10,24 @@ namespace BL.Services
 {
     public class RecommendationService
     {
+        public static BeerRepository Repository =>  new BeerRepository();
+
         public static List<Beer> RecommendRandomBeers(int numberOfBeers)
         {
-            BeerRepository br = new BeerRepository();
-            var beers = br.RetrieveAll();
+            var beers = Repository.RetrieveAll();
             var random = new Random();
             var randomBeers = new List<Beer>();
             for (int i = 0; i < numberOfBeers; i++)
             {
                 var randomBeerId = random.Next(0, beers.Count);
-                randomBeers.Add(br.RetrieveById(randomBeerId));
+                randomBeers.Add(Repository.RetrieveById(randomBeerId));
             }
             return randomBeers;
         }
 
-        public static List<Beer> ReccomendBeers(List<Beer> pickedPopularBeers, int numberOfBeersToRecommend, Region selectedRegion = null)
+        public static List<Beer> Recommend(List<Beer> pickedPopularBeers, int numberOfBeersToRecommend, Region selectedRegion = null)
         {
-            BeerRepository br = new BeerRepository();
-            var tagsFromPickedPopularBeers = br.RetrieveTagsFromBeers(pickedPopularBeers);
+            var tagsFromPickedPopularBeers = Repository.RetrieveTagsFromBeers(pickedPopularBeers);
 
             var groups = tagsFromPickedPopularBeers.GroupBy(s => s)
                 .Select(s => new { Tag = s.Key, Count = s.Count() });
@@ -36,10 +36,10 @@ namespace BL.Services
 
 
             // Beers containing tags
-            var allBeers = br.RetrieveAllBeersWithBreweries().Except(pickedPopularBeers);
+            var allBeers = Repository.RetrieveAllBeersWithBreweries().Except(pickedPopularBeers);
             if (selectedRegion != null)
             {
-                allBeers = allBeers.Where(b => b.Brewery.Region == selectedRegion).ToList();
+                allBeers = allBeers.Where(b => b.Brewery?.Region == selectedRegion).ToList();
             }
             var beersContainingSelectedTags = allBeers
                 .Where(b => b.Tags.Intersect(tagsFromDictionary).Any())

@@ -12,9 +12,9 @@ namespace BL.Services
 {
     public static class UserService
     {
-        public static int CreateUser(List<Beer> pickedBeers, List<Beer> recommendedBeers, int? regionId) {
+        public static int CreateUser(List<Beer> pickedBeers, List<Beer> recommendedBeers, int? regionId, AppDbContext repositoryContext) {
 
-            UserRepository userRepo = new UserRepository();
+            UserRepository userRepo = new UserRepository(repositoryContext);
             User user = new User();
 
             if (regionId != null)

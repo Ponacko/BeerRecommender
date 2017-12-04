@@ -11,6 +11,11 @@ namespace BeerRecommender.Repositories
             entities = context.Users;
         }
 
+        public UserRepository(AppDbContext repositoryContext) {
+            context = repositoryContext;
+            entities = context.Users;
+        }
+
         public void AddPickedBeer(User user, Beer beer) {
             context.Beers.Attach(beer);
             user.PickedBeers.Add(beer);

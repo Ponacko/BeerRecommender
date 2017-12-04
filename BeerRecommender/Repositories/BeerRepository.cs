@@ -40,5 +40,10 @@ namespace BeerRecommender.Repositories
         {
             return context.Beers.Include(b => b.Brewery).Include(b => b.Brewery.Region).ToList();
         }
+
+        public AppDbContext Context {
+            get { return context; }
+            set { context = value; }
+        }
     }
 }
