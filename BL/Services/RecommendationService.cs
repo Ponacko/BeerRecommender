@@ -36,7 +36,7 @@ namespace BL.Services
 
 
             // Beers containing tags
-            var allBeers = Repository.RetrieveAllBeersWithBreweries().Except(pickedPopularBeers);
+            var allBeers = Repository.RetrieveAllBeersWithBreweriesAndTags().Except(pickedPopularBeers);
             if (selectedRegion != null)
             {
                 allBeers = allBeers.Where(b => b.Brewery?.Region == selectedRegion).ToList();
