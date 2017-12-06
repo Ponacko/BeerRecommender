@@ -1,8 +1,8 @@
 ﻿@model Web.Models.UserModel
 @{
-    ViewBag.Title = "Vyberte svoje oľúbené pivá";
+    ViewBag.Title = "Beer recommender";
 }
-<h2>@ViewBag.Title</h2>
+<h2>Vyberte svoje oľúbené pivá</h2>
 @using (Html.BeginForm("Index", "Home")) {
     <table class="table  table-inverse">
         @for (var i = 0; i <= ViewBag.Count/5; i++) {
@@ -10,13 +10,19 @@
                 @for (var j = 0; j < 5 && j + i*5 < ViewBag.Count; j++) {
                     <td style="padding: 10px;">
 
-                            @{
-                                var beer = ViewBag.Beers[i * 5 + j];
-                                <img src="@beer.ImageUrl" alt="@beer.Name" />
-                                <br />
-                                <input type="checkbox" name="SelectedBeers" value="@beer.Id">
-                                <b>@beer.Name</b>
-                            }
+                        @{
+                            var beer = ViewBag.Beers[i*5 + j];
+                            <div class="checkbox">
+                                <label for="@beer.Id">
+                                    <img src="@beer.ImageUrl" alt="@beer.Name"/>
+                                </label>
+                                <br/>
+                                <input type="checkbox" name="SelectedBeers" class="form-check-input" value="@beer.Id" id="@beer.Id">
+                                <label for="@beer.Id">
+                                    <b>@beer.Name</b>
+                                </label>
+                            </div>
+                        }
 
                     </td>
                 }
@@ -26,9 +32,12 @@
     </table>
 
     <div style="text-align: center;">
-        <h4>Kraj</h4><br/>
-        @Html.DropDownListFor(model => model.RegionId,(SelectList)ViewBag.SelectList, "-- Vyberte kraj --")
+        <h2>Vyberte kraj</h2><br/>
+        @Html.DropDownListFor(model => model.RegionId, (SelectList)ViewBag.SelectList, "Celé Česko" ,new { @class = "selectpicker" } )
+        <br/>
+        <br />
 
-        <input type="submit" value="Odoslať"/>
+
+        <input type="submit" class="btn btn-primary" value="Odoslať"/>
     </div>
 }
