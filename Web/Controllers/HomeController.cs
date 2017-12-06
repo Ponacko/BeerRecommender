@@ -28,11 +28,7 @@ namespace Web.Controllers {
         public ActionResult Index(UserModel userModel) {
             if (ModelState.IsValid) {
                 var beers = BeerService.GetBeersByIds(userModel.SelectedBeers);
-                Region region = null;
-                if (userModel.RegionId != null) {
-                    region = RegionService.GetRegion((int)userModel.RegionId);
-                }
-                var recommended = RecommendationService.Recommend(beers, 5, region);
+                
                 var id = UserService.CreateUser(beers, userModel.RegionId, RecommendationService.Repository.Context);
                 return RedirectToAction("Recommend", new {userId = id});
             }
@@ -43,11 +39,12 @@ namespace Web.Controllers {
         public ActionResult Recommend(int userId) {
             
             ViewBag.UserId = userId;
-            ViewBag.Region = UserService.GetUserRegion(userId)?.Name;
+            var region = UserService.GetUserRegion(userId);
+            ViewBag.Region = region?.Name;
             var picked = UserService.GetUsersPickedBeers(userId);
             ViewBag.PickedBeers = picked;
             ViewBag.PickedCount = picked.Count;
-            var recommended = UserService.GetUsersRecommendedBeers(userId);
+            var recommended = RecommendationService.Recommend(picked, 5, region);
             ViewBag.RecommendedBeers = recommended;
             ViewBag.RCount = recommended.Count;
             ViewBag.RandomBeers = RecommendationService.RecommendRandomBeers(5);
