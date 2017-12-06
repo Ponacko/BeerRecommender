@@ -36,12 +36,13 @@ namespace BeerRecommender.Repositories
             return tagsList.ToList();
         }
 
-        public List<Beer> RetrieveAllBeersWithBreweries()
+        public List<Beer> RetrieveAllBeersWithBreweriesAndTags()
         {
-            return context.Beers.Include(b => b.Brewery).Include(b => b.Brewery.Region).ToList();
+            return context.Beers.Include(b => b.Tags).Include(b => b.Brewery).Include(b => b.Brewery.Region).ToList();
         }
 
-        public AppDbContext Context {
+        public AppDbContext Context
+        {
             get { return context; }
             set { context = value; }
         }
