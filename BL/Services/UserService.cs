@@ -12,7 +12,7 @@ namespace BL.Services
 {
     public static class UserService
     {
-        public static int CreateUser(List<Beer> pickedBeers, List<Beer> recommendedBeers, int? regionId, AppDbContext repositoryContext) {
+        public static int CreateUser(List<Beer> pickedBeers, int? regionId, AppDbContext repositoryContext) {
 
             UserRepository userRepo = new UserRepository(repositoryContext);
             User user = new User();
@@ -28,10 +28,6 @@ namespace BL.Services
             {
                 foreach (var pickedBeer in pickedBeers) {
                     userRepo.AddPickedBeer(user, pickedBeer);
-                }
-                foreach (var recommendedBeer in recommendedBeers)
-                {
-                    userRepo.AddRecommendedBeer(user, recommendedBeer);
                 }
 
                 var id = userRepo.Create(user);

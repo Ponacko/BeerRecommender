@@ -33,7 +33,7 @@ namespace Web.Controllers {
                     region = RegionService.GetRegion((int)userModel.RegionId);
                 }
                 var recommended = RecommendationService.Recommend(beers, 5, region);
-                var id = UserService.CreateUser(beers, recommended, userModel.RegionId, RecommendationService.Repository.Context);
+                var id = UserService.CreateUser(beers, userModel.RegionId, RecommendationService.Repository.Context);
                 return RedirectToAction("Recommend", new {userId = id});
             }
             return View();
