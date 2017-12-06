@@ -3,24 +3,20 @@
 }
 <h2>@ViewBag.Title.</h2>
 
-Id uzivatela: {@ViewBag.UserId}
-Kraj: {@ViewBag.Region}
 
-Vybrate piva:
+Vybraté pivá:
 <table class="table  table-inverse">
     @for (var i = 0; i <= ViewBag.PickedCount/5; i++) {
         <tr>
             @for (var j = 0; j < 5 && j + i*5 < ViewBag.PickedCount; j++) {
                 <td style="padding: 10px;">
 
-                    <a href="#">
                         @{
                             var beer = ViewBag.PickedBeers[i*5 + j];
                             <img src="@beer.ImageUrl" alt="@beer.Name"/>
                             <br/>
-                            @beer.Name
+                            <b>@beer.Name</b>
                         }
-                    </a>
 
                 </td>
             }
@@ -29,20 +25,18 @@ Vybrate piva:
     }
 </table>
 
-Odporucane piva:
+Odporúčané pivá (1. algoritmus):
 <table class="table  table-inverse">
     <tr>
         @for (var j = 0; j < ViewBag.RCount; j++) {
             <td style="padding: 10px;">
 
-                <a href="#">
                     @{
                         var beer = ViewBag.RecommendedBeers[j];
-                        <img src="@beer.ImageUrl" alt="@beer.Name"/>
+                        <img src="@beer.ImageUrl" alt="@beer.Description"/>
                         <br/>
-                        @beer.Name
+                        <b>@beer.Name</b>
                     }
-                </a>
 
             </td>
         }
@@ -50,20 +44,18 @@ Odporucane piva:
     </tr>
 </table>
 
-Odporucane piva 2:
+Odporúčané pivá (2. algoritmus):
 <table class="table  table-inverse">
     <tr>
         @for (var j = 0; j < 5; j++) {
             <td style="padding: 10px;">
 
-                <a href="#">
                     @{
                         var beer = ViewBag.RandomBeers[j];
-                        <img src="@beer.ImageUrl" alt="@beer.Name"/>
+                        <img src="@beer.ImageUrl" alt="@beer.Description"/>
                         <br/>
-                        @beer.Name
+                        <b>@beer.Name</b>
                     }
-                </a>
 
             </td>
         }

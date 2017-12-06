@@ -1,6 +1,6 @@
 ﻿@model Web.Models.UserModel
 @{
-    ViewBag.Title = "Beers";
+    ViewBag.Title = "Vyberte svoje oľúbené pivá";
 }
 <h2>@ViewBag.Title</h2>
 @using (Html.BeginForm("Index", "Home")) {
@@ -10,15 +10,13 @@
                 @for (var j = 0; j < 5 && j + i*5 < ViewBag.Count; j++) {
                     <td style="padding: 10px;">
 
-                        <a href="#">
                             @{
                                 var beer = ViewBag.Beers[i * 5 + j];
                                 <img src="@beer.ImageUrl" alt="@beer.Name" />
                                 <br />
                                 <input type="checkbox" name="SelectedBeers" value="@beer.Id">
-                                @beer.Name
+                                <b>@beer.Name</b>
                             }
-                        </a>
 
                     </td>
                 }
@@ -31,6 +29,6 @@
         <h4>Kraj</h4><br/>
         @Html.DropDownListFor(model => model.RegionId,(SelectList)ViewBag.SelectList, "-- Vyberte kraj --")
 
-        <input type="submit" value="Submit"/>
+        <input type="submit" value="Odoslať"/>
     </div>
 }
