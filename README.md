@@ -13,3 +13,14 @@ Work distribution:
 - Tomas P. (Data scraping and parsing, Recommendation algorithm, Beer picking for the frontpage, some DB migrations)
 - Matus M. (Entities, service methods, presentation, some DB migrations)
 - Tomas S. (Project set-up, DB initialization, Web UI, some DB migrations, parsing set-up)
+
+
+Recommendation algorithm specifics:
+1. Take all beers selected by users
+2. Group tags they contain and count occurrencess for each tag (which become the weight for the tag)
+3. From all beers take only the ones that contain at least one of the grouped tags except the user selected beers
+4. Assign score to each beer based on sum of the weights for each tag they contain
+5. Pick the top 5 beers
+
+We also tried enhancement for the algorithm (but since we did not manage to test it extensively we did not include it):
+* In step 5 select only top 3 beers, then select 2 more beers randomly from the top 4.-10. positions.
