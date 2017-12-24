@@ -68,3 +68,26 @@ Odporúčané pivá (2. algoritmus):
 
     </tr>
 </table>
+
+Odporúčané pivá (Single algoritmus):
+<table class="table  table-inverse">
+    <tr>
+        @for (var j = 0; j < ViewBag.RSCount; j++)
+        {
+            <td style="padding: 10px;">
+
+                @{
+                    var beer = ViewBag.RecommendedSingle[j];
+                    <img src="@beer.ImageUrl" />
+                    <br />
+                    <b>@beer.Name</b>
+                    <p>
+                        @beer.Description
+                    </p>
+                }
+
+            </td>
+                    }
+
+    </tr>
+</table>

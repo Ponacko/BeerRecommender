@@ -48,6 +48,9 @@ namespace Web.Controllers {
             ViewBag.RecommendedBeers = recommended;
             ViewBag.RCount = recommended.Count;
             ViewBag.RandomBeers = RecommendationService.RecommendRandomBeers(5);
+            var recommendedSingle = RecommendationService.ReccomendBeersSingle(picked, region);
+            ViewBag.RecommendedSingle = recommendedSingle;
+            ViewBag.RSCount = recommendedSingle.Count;
 
             return View();
         }

@@ -31,6 +31,7 @@ namespace BL.Services {
                     GetBeersWithBestCoefficient(1, beersContainingSelectedTags, pickedTags.ToDictionary(t => t, t => 1)
                     ).First());
             }
+
             return recommendedBeers;
         }
 
