@@ -20,7 +20,7 @@ namespace Web.Controllers {
             var dict = regions.ToDictionary(region => region.Id, region => region.Name);
             ViewBag.SelectList = new SelectList(dict, "Key", "Value");
             var model = new UserModel();
-
+            
             return View(model);
         }
 
@@ -51,6 +51,8 @@ namespace Web.Controllers {
             var recommendedSingle = RecommendationService.ReccomendBeersSingle(picked, region);
             ViewBag.RecommendedSingle = recommendedSingle;
             ViewBag.RSCount = recommendedSingle.Count;
+
+            ViewBag.RecommendedIntersection = RecommendationService.RecommendBiggestIntersection(picked, region);
 
             return View();
         }

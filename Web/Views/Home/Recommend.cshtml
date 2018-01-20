@@ -87,6 +87,29 @@ Odporúčané pivá (Single algoritmus):
                 }
 
             </td>
+        }
+
+    </tr>
+</table>
+
+Odporúčané pivá (Closest neighbour algoritmus):
+<table class="table  table-inverse">
+    <tr>
+        @for (var j = 0; j < ViewBag.RecommendedIntersection.Count; j++)
+        {
+            <td style="padding: 10px;">
+
+                @{
+                    var beer = ViewBag.RecommendedIntersection[j];
+                    <img src="@beer.ImageUrl" />
+                    <br />
+                    <b>@beer.Name</b>
+                    <p>
+                        @beer.Description
+                    </p>
+                }
+
+            </td>
                     }
 
     </tr>

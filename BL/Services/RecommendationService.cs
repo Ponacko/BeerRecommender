@@ -100,5 +100,54 @@ namespace BL.Services {
             }
             return beersWithCoefficient;
         }
+
+      
+        public static List<Beer> RecommendBiggestIntersection(List<Beer> pickedPopularBeers,
+            Region selectedRegion = null) {
+            var tagsFromPickedPopularBeers = Repository.RetrieveTagsFromBeersDictionary(pickedPopularBeers);
+            
+            var groupedTags = new List<Dictionary<Tag, int>>();
+            foreach (var firstPair in tagsFromPickedPopularBeers) {
+                var biggestIntersection = new KeyValuePair<Beer, List<Tag>>();
+                var intersectionSize = 0;
+                intersectionSize = FindIntersection(tagsFromPickedPopularBeers, firstPair, intersectionSize, ref biggestIntersection);
+                if (intersectionSize > 3) {
+                    var groupedPair = firstPair.Value.Concat(biggestIntersection.Value)
+                        .GroupBy(s => s).Select(s => new { Tag = s.Key, Count = s.Count() }).ToDictionary(g => g.Tag, g => g.Count);
+                    if (!groupedTags.Contains(groupedPair)) {
+                        groupedTags.Add(groupedPair);
+                    }
+                }
+                else {
+                    var dictionary = firstPair.Value.ToDictionary(t => t, t => 1);
+                    groupedTags.Add(dictionary);
+                }
+            }
+
+
+            var allBeers = GetAllBeersForRegion(pickedPopularBeers, selectedRegion).ToList();
+            var recommendedBeers = new List<Beer>();
+            foreach (var tagGroup in groupedTags)
+            {
+                var beersContainingSelectedTags = GetBeersContainingSelectedTags(allBeers, tagGroup.Keys.ToList());
+                recommendedBeers.Add(
+                    GetBeersWithBestCoefficient(1, beersContainingSelectedTags, tagGroup
+                    ).First());
+            }
+
+            return recommendedBeers.Distinct().ToList();
+        }
+
+        private static int FindIntersection(Dictionary<Beer, List<Tag>> tagsFromPickedPopularBeers, KeyValuePair<Beer, List<Tag>> firstPair, int intersectionSize,
+            ref KeyValuePair<Beer, List<Tag>> biggestIntersection) {
+            foreach (var secondPair in tagsFromPickedPopularBeers) {
+                if (firstPair.Key == secondPair.Key) continue;
+                var intersection = firstPair.Value.Intersect(secondPair.Value).ToList();
+                if (intersection.Count() <= intersectionSize) continue;
+                biggestIntersection = secondPair;
+                intersectionSize = intersection.Count();
+            }
+            return intersectionSize;
+        }
     }
 }

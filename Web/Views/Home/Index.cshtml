@@ -33,11 +33,12 @@
 
     <div style="text-align: center;">
         <h2>Vyberte kraj</h2><br/>
-        @Html.DropDownListFor(model => model.RegionId, (SelectList)ViewBag.SelectList, "Celé Česko" ,new { @class = "selectpicker" } )
+        @Html.DropDownListFor(model => model.RegionId, (SelectList) ViewBag.SelectList, "Celé Česko", new {@class = "selectpicker"})
         <br/>
-        <br />
+        <br/>
 
 
         <input type="submit" class="btn btn-primary" value="Odoslať"/>
+     
     </div>
 }
