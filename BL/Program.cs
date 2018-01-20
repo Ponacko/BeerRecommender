@@ -25,6 +25,9 @@ namespace BL
             Console.WriteLine();
             Console.WriteLine("Our recommendation is:");
             var finalyDone = RecommendationService.Recommend(popularBeers, 10/*, region*/);
+
+            var fD = RecommendationService.RecommendBeersCombined(popularBeers, 5);
+
             finalyDone.ForEach(x => Console.WriteLine(x.Name));
             Console.ReadKey();
         }

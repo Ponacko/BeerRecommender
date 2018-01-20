@@ -35,6 +35,77 @@ namespace BL.Services {
             return recommendedBeers;
         }
 
+        public static List<Beer> RecommendBeersCombined(List<Beer> pickedPopularBeers, int numberOfRecommendations, Region selectedRegion = null, bool distinctMode = false)
+        {
+            var allBeers = GetAllBeersForRegion(pickedPopularBeers, selectedRegion).ToList();
+
+            var tagsFromPickedPopularBeers = Repository.RetrieveTagsFromBeers(pickedPopularBeers);
+            GetGroupedTags(tagsFromPickedPopularBeers, 
+                out Dictionary<Tag, int> tagWeightDictionary, 
+                out List<Tag> tagsFromDictionary);
+            var beersContainingSelectedTagsMultiple = GetBeersContainingSelectedTags(allBeers, tagsFromDictionary);
+
+            var beersWithCoefficientMult = CalculateCoefficients(beersContainingSelectedTagsMultiple, tagWeightDictionary);
+            double coefSumMult = beersWithCoefficientMult.Select(r => r.Item2).Sum();
+            var sortedBeersByCoefficientMult = beersWithCoefficientMult.OrderByDescending(b => b.Item2)
+                .Select(r => new Tuple<Beer, double>
+                (
+                    r.Item1,
+                    r.Item2 / coefSumMult
+                )).ToList();
+
+            var recommendationsWithWeightsMult = sortedBeersByCoefficientMult.Take(50).ToList();
+
+            var unflatennedRecommendationsWithWeights = new List<Tuple<Beer, double>>();
+            foreach (var beer in pickedPopularBeers)
+            {
+                var pickedTags = Repository.RetrieveTagsFromBeers(new List<Beer> { beer });
+                var beersContainingSelectedTagsSingle = GetBeersContainingSelectedTags(allBeers, pickedTags);
+
+                var beersWithCoefficient = CalculateCoefficients(beersContainingSelectedTagsSingle, 
+                                                                 pickedTags.ToDictionary(t => t, t => 1));
+                double coefSum = beersWithCoefficient.Select(r => r.Item2).Sum();
+                var sortedBeersByCoefficient = beersWithCoefficient.OrderByDescending(b => b.Item2)
+                    .Select(r => new Tuple<Beer, double>
+                    (
+                        r.Item1,
+                        r.Item2 / coefSum
+                    )).ToList();
+
+                unflatennedRecommendationsWithWeights.AddRange(sortedBeersByCoefficient.Take(20).ToList());
+            }
+
+            unflatennedRecommendationsWithWeights = unflatennedRecommendationsWithWeights.GroupBy(
+                b => b.Item1).Select(x => new Tuple<Beer, double>
+                (
+                    x.Key,
+                    x.Max(y => y.Item2)
+                )).OrderByDescending(b => b.Item2).ToList();
+
+            unflatennedRecommendationsWithWeights.AddRange(recommendationsWithWeightsMult);
+            List<Beer> finalRecommendations;
+            if (distinctMode)
+            {
+                var flatennedRecommendations = unflatennedRecommendationsWithWeights.GroupBy(
+                  b => b.Item1).Select(x => new
+                  {
+                      Beer = x.Key,
+                      Weight = x.Sum(y => y.Item2)
+                  }).OrderByDescending(b => b.Weight).GroupBy(x => x.Weight).Select(x => new { Weight = x.Key, Beer = x.First().Beer }).ToList();
+                finalRecommendations = flatennedRecommendations.Take(numberOfRecommendations).Select(r => r.Beer).ToList();
+            } else
+            {
+                var flatennedRecommendations = unflatennedRecommendationsWithWeights.GroupBy(
+                  b => b.Item1).Select(x => new
+                  {
+                      Beer = x.Key,
+                      Weight = x.Sum(y => y.Item2)
+                  }).OrderByDescending(b => b.Weight).ToList();
+                finalRecommendations = flatennedRecommendations.Take(numberOfRecommendations).Select(r => r.Beer).ToList();
+            }
+            return finalRecommendations;
+        }
+
         private static List<Beer> GetBeersContainingSelectedTags(IEnumerable<Beer> allBeers, List<Tag> pickedTags) {
             return allBeers
                 .Where(b => b.Tags.Intersect(pickedTags).Any())
